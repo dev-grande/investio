@@ -14,12 +14,10 @@ export default class CSVUploader extends Component {
     for (var ndx in data) {
       console.log(ndx);
       var vals = data[ndx].data;
-      console.log(vals);
 
       if (ndx == 0) {
         dates = vals;
         dates.shift();
-        console.log(dates);
       }
       else {
         var val1 = {};
@@ -45,6 +43,7 @@ export default class CSVUploader extends Component {
     console.log(result);
 
     this.props.onSelectFile(result);
+    this.props.onDataLoaded();
     console.log('---------------------------')
   }
 

@@ -1,11 +1,17 @@
 import React, {Component} from 'react';
-import LineChart from "./LineChart";
-import CSVUploader from "./CSVUploader"
+import LineChart from "./components/LineChart";
+import CSVUploader from "./components/CSVUploader"
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {data: []};
+    this.state = {
+      data: [],
+      showHideUpload: true,
+      showHideChart: false
+    };
+
+    this.hideComponent = this.hideComponent.bind(this);
   }
 
   handleData = (dataVal) => {
@@ -13,10 +19,14 @@ class App extends Component {
     this.setState({data: dataVal});
   }
 
+  hideComponent() {
+    this.setState({ showHideUpload: !this.state.showHideUpload })
+    this.setState({ showHideChart: !this.state.showHideChart });
+
+  }
+
   render() {
-    // if (!this.state.data) {
-    //   return <div />;
-    // }
+    const { showHideUpload, showHideChart } = this.state;
 
     return  <div>
       <h1>Investment Web App </h1>
@@ -30,8 +40,34 @@ class App extends Component {
                 align-items: center;
             }
         `}</style>
-      <CSVUploader onSelectFile={this.handleData}/>
-      <LineChart data={this.state.data}/>
+      
+      { showHideUpload &&
+        <CSVUploader onSelectFile={this.handleData} onDataLoaded={this.hideComponent}/>
+      }
+      
+      {/* { showHideUpload &&
+      <div>
+        <button onClick={() => this.hideComponent()}>
+              Create Chart
+        </button>
+      </div>
+      } */}
+
+      { showHideChart &&
+      <div>
+        <button onClick={() => this.hideComponent()}>
+              Upload new CSV file
+        </button>
+      </div>
+      }
+
+      { showHideChart &&
+        <LineChart data={this.state.data}/>
+      }
+
+
+
+
     </div>;
   }
 }

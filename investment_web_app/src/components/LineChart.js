@@ -6,7 +6,7 @@ class LineChart extends Component {
     render() {
         const {data} = this.props;
         return (
-            <div style={{height: 400, width: 800}}>
+            <div style={{height: "50vh" , width: "100vh"}}>
                 <h2>Dividends</h2>
 
                 <ResponsiveLine
@@ -30,7 +30,7 @@ class LineChart extends Component {
                     tickSize: 5,
                     tickPadding: 5,
                     tickRotation: 0,
-                    legend: 'amount',
+                    legend: 'Amount',
                     legendOffset: -40,
                     legendPosition: 'middle'
                 }}
