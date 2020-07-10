@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { ResponsiveLine } from '@nivo/line'
 
-
 class LineChart extends Component {
 
     render() {
@@ -9,7 +8,6 @@ class LineChart extends Component {
         return (
             <div style={{height: 400, width: 800}}>
                 <h2>Dividends</h2>
-
 
                 <ResponsiveLine
                 data={data}
@@ -32,7 +30,7 @@ class LineChart extends Component {
                     tickSize: 5,
                     tickPadding: 5,
                     tickRotation: 0,
-                    legend: 'count',
+                    legend: 'amount',
                     legendOffset: -40,
                     legendPosition: 'middle'
                 }}
