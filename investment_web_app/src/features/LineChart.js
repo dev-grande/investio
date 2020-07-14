@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import { ResponsiveLine } from '@nivo/line'
+import { useSelector, useDispatch } from 'react-redux'
+import { selectData } from './chartDataSlice'
 
-class LineChart extends Component {
-
-    render() {
-        const {data} = this.props;
+export function LineChart () {
+    const data = useSelector(selectData);
         return (
             <div style={{height: "50vh" , width: "100vh"}}>
                 <h2>Dividends</h2>
@@ -74,7 +74,7 @@ class LineChart extends Component {
 
         </div>
         )
-    }
+
 }
 
-export default LineChart;
+
