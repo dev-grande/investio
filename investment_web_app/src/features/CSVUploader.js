@@ -2,30 +2,36 @@ import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { CSVReader } from 'react-papaparse'
 import { parse, selectData } from './chartDataSlice'
+import { Button } from 'react-bootstrap'
+
+const buttonRef = React.createRef()
 
 function handleOnError(err, file, inputElem, reason){
   console.log(err)
 }
 
-function handleOnRemoveFile(data){
-  console.log('---------------------------')
-  console.log(data)
-  console.log('---------------------------')
+function handleOpenDialog(e){
+  // Note that the ref is set async, so it might be null at some point 
+  if (buttonRef.current) {
+    buttonRef.current.open(e)
+  }
 }
 
-
 export function CSVUploader() {
-
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
     return (
       <CSVReader
-        onDrop={data => dispatch(parse(data))}
-        onError={e => handleOnError(e.err, e.file, e.inputElem, e.reason)}
-        addRemoveButton
-        onRemoveFile={data => handleOnRemoveFile(data)}
-      >
-        <span>Drop CSV file here or click to upload.</span>
-      </CSVReader>
-    )
-  
+      ref={buttonRef}
+      onFileLoad={(data, fileInfo) => dispatch(parse(data))}
+      onError={e => handleOnError(e.err, e.file, e.inputElem, e.reason)}
+      noClick
+      noDrag
+      noProgressBar
+    >
+      {({ file }) => (
+         <Button variant="info" onClick={(e) => handleOpenDialog(e)}>
+           Upload
+         </Button>
+       )}
+    </CSVReader>  )
 }

@@ -1,35 +1,39 @@
 import React, { useState } from 'react';
 import { LineChart } from "./features/LineChart";
 import { CSVUploader } from "./features/CSVUploader";
+import { CSVUploaderDrag } from "./features/CSVUploaderDrag";
+import { Navbar,Nav,NavDropdown,Form,FormControl,Button } from 'react-bootstrap'
+
 
 export function App() {
-    // const { showHideUpload, showHideChart } = this.state;
-    return  <div>
-      <h1>Investment Web App </h1>
-      <style jsx global>{`
-            body {
-                height: 100vh;
-                width: 100vw;
-                display: grid;
-                text-align: center;
-                justify-content: center;
-                align-items: center;
-            }
-        `}</style>
+    return (    
+    <div>
       
-      <CSVUploader />
-      <LineChart />
+      <Navbar bg="dark" expand="lg" variant="dark" >
+        <Navbar.Brand bg="light" href="#home">Investment Web App</Navbar.Brand>
+        <Nav class="ml-auto">
+          <CSVUploader />
+        </Nav>
+      </Navbar>
 
+      <div class="mt-4 container">
 
-      {/* { showHideChart &&
-      <div>
-        <button onClick={() => this.hideComponent()}>
-              Upload new CSV file
-        </button>
+        <div class="row justify-content-center ">
+          <LineChart />
+        </div>
+
+        <br></br> <br></br>
+
+        <div class="mt-5 row justify-content-center">
+          <div class="col">
+            <CSVUploaderDrag />
+          </div>
+        </div>
+
       </div>
-      } */}
 
-    </div>;
+    </div>
+    );
   
 }
 

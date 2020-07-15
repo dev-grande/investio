@@ -3,6 +3,6 @@ import chartDataReducer from '../features/chartDataSlice'
 
 export default configureStore({
   reducer: {
-    chart_data:  chartDataReducer,
+    chart_data: chartDataReducer,
   }
 })

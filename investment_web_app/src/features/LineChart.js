@@ -6,8 +6,9 @@ import { selectData } from './chartDataSlice'
 export function LineChart () {
     const data = useSelector(selectData);
         return (
-            <div style={{height: "50vh" , width: "100vh"}}>
-                <h2>Dividends</h2>
+            <div style={{height: "50vh" , width: "100vh"}} class="m-auto row justify-content-center">
+            <div class="row justify-content-center"><h2>Dividends</h2></div>
+                
 
                 <ResponsiveLine
                 data={data}
