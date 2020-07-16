@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { ResponsiveLine } from '@nivo/line'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { selectData } from './chartDataSlice'
 
 export function LineChart () {

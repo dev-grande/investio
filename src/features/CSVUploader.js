@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React from 'react'
+import { useDispatch } from 'react-redux'
 import { CSVReader } from 'react-papaparse'
-import { parse, selectData } from './chartDataSlice'
+import { parse } from './chartDataSlice'
 import { Button } from 'react-bootstrap'
 
 const buttonRef = React.createRef()
