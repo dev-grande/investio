@@ -1,17 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { App } from './App';
+// import { App } from './App';
 import store from './app/store';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
+import 'fomantic-ui-css/semantic.css';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { Routes } from './AppRouter'; // where we are going to specify our routes
+
 
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      {/* <App /> */}
+    <Router>
+      <Routes />
+    </Router>,
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
