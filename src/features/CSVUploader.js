@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { CSVReader } from 'react-papaparse'
-import { parse } from './chartDataSlice'
+import { parse } from '../reducers/chartDataSlice'
 import { Button } from 'react-bootstrap'
 
 const buttonRef = React.createRef()
@@ -34,4 +34,4 @@ export function CSVUploader() {
          </Button>
        )}
     </CSVReader>  )
-}
+};

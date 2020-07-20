@@ -1,22 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CSVUploader } from "../features/CSVUploader";
 import { Navbar, Nav } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
-import { getPages, switchPage } from './navigationSlice'
+import { getPages, switchPage } from "../reducers/navigationSlice"
 import { useDispatch } from 'react-redux'
-
-
 
 const NavBar = () => {
     const pages = useSelector(getPages);
     const dispatch = useDispatch();
+
     return (
     <div>
         <Navbar bg="dark" expand="lg" variant="dark" >
         <Navbar.Brand bg="light" href="#home">Investment Web App</Navbar.Brand>
         <Nav class="ml-auto">
-            <CSVUploader />
+            <Link class="btn btn-info" role="button" to="/login">Logout</Link>
         </Nav>
         </Navbar>
 

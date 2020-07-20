@@ -1,30 +1,19 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-// import { App } from './App';
-import store from './app/store';
+import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import * as serviceWorker from './serviceWorker';
-import './index.css';
+
+import { store } from './helpers';
+import { App } from './App';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'fomantic-ui-css/semantic.css';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { Routes } from './AppRouter'; // where we are going to specify our routes
 
+// setup fake backend
+import { configureFakeBackend } from './helpers';
+configureFakeBackend();
 
-
-ReactDOM.render(
-  <React.StrictMode>
+render(
     <Provider store={store}>
-      {/* <App /> */}
-    <Router>
-      <Routes />
-    </Router>,
-    </Provider>
-  </React.StrictMode>,
-  document.getElementById('root')
+        <App />
+    </Provider>,
+    document.getElementById('app')
 );
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();

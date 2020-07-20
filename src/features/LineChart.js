@@ -1,7 +1,7 @@
 import React from 'react';
 import { ResponsiveLine } from '@nivo/line'
 import { useSelector } from 'react-redux'
-import { selectData } from './chartDataSlice'
+import { selectData } from '../reducers/chartDataSlice'
 
 export function LineChart () {
     const data = useSelector(selectData);

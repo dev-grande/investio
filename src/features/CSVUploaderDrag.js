@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { CSVReader } from 'react-papaparse'
-import { parse } from './chartDataSlice'
+import { parse } from '../reducers/chartDataSlice'
 
 function handleOnError(err, file, inputElem, reason){
   console.log(err)
