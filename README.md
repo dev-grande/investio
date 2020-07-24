@@ -48,10 +48,10 @@ $ npm install
 
 ### Login page
 
-![Alt text](relative/public/login.png?raw=true "Login page flow")
+![Alt text](public/login.png?raw=true "Login page flow")
 
 ### Register page
 
-![Alt text](relative/public/register.png?raw=true "Register page flow")
+![Alt text](public/register.png?raw=true "Register page flow")
 
 ---
