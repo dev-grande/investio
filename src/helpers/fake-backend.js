@@ -1,5 +1,6 @@
 // array in local storage for registered users
 let users = JSON.parse(localStorage.getItem('users')) || [];
+let data = JSON.parse(localStorage.getItem('data')) || [];
     
 export function configureFakeBackend() {
     let realFetch = window.fetch;
@@ -19,6 +20,10 @@ export function configureFakeBackend() {
                         return register();
                     case url.endsWith('/users') && method === 'GET':
                         return getUsers();
+                    case url.endsWith('/data/upload') && method === 'POST':
+                        return uploadData();
+                    case url.endsWith('/data') && method === 'GET':
+                        return getData();
                     case url.match(/\/users\/\d+$/) && method === 'DELETE':
                         return deleteUser();
                     default:
@@ -56,9 +61,47 @@ export function configureFakeBackend() {
                 users.push(user);
                 localStorage.setItem('users', JSON.stringify(users));
 
+                var initialUserData = {
+                    id: user.id,
+                    years: [],
+                    selected_year: "",
+                    data: []
+                    //  array of {year: ????, chart_data: {x and y's}, raw_data: = [] or {} ? 
+                }
+                data.push(initialUserData);
+                localStorage.setItem('data', JSON.stringify(data));
+                
+
                 return ok();
             }
     
+            function uploadData() {
+                const { user_id, parsed_data } = body;
+                var user_data;
+                data.forEach(function (value, index) {
+                    if (value.id === user_id) {
+                        user_data = value;
+                        user_data.years.push(parsed_data.year);
+                        user_data.selected_year = parsed_data.year;
+                        user_data.data.push(parsed_data);
+                        data[index] = user_data;
+                    }
+                });
+    
+                localStorage.setItem('data', JSON.stringify(data));
+
+                return ok(user_data);
+            }
+
+            function getData() {
+                const user_id = body.user_id;
+
+                if (!isLoggedIn()) return unauthorized();
+                var user_data = data.find(user => user.id === user_id);
+
+                return ok(user_data);
+            }
+
             function getUsers() {
                 if (!isLoggedIn()) return unauthorized();
 

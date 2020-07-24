@@ -11,22 +11,22 @@ const NavBar = () => {
 
     return (
     <div>
-        <Navbar bg="dark" expand="lg" variant="dark" >
+        <Navbar fixed="top" bg="dark" expand="lg" variant="dark" >
         <Navbar.Brand bg="light" href="#home">Investment Web App</Navbar.Brand>
-        <Nav class="ml-auto">
-            <Link class="btn btn-info" role="button" to="/login">Logout</Link>
+        <Nav className="ml-auto">
+            <Link className="btn btn-info" role="button" to="/login">Logout</Link>
         </Nav>
         </Navbar>
 
-        <div class="ui teal vertical left fixed labeled icon menu" style={{top: "50px"}}>
-            <Link to="/Dashboard" class={pages[0]} onClick={() => dispatch(switchPage("dashboard"))}>
-                <i aria-hidden="true" class="newspaper icon"></i>
+        <div className="ui teal vertical left fixed labeled icon menu" style={{top: "50px"}}>
+            <Link to="/Dashboard" className={pages[0]} onClick={() => dispatch(switchPage("dashboard"))}>
+                <i aria-hidden="true" className="newspaper icon"></i>
                 Dashboard</Link>
-            <Link to="/Reports" class={pages[1]} onClick={() => dispatch(switchPage("reports"))}>
-            <i aria-hidden="true" class="line chart icon"></i>
+            <Link to="/Reports" className={pages[1]} onClick={() => dispatch(switchPage("reports"))}>
+            <i aria-hidden="true" className="line chart icon"></i>
                 Reports</Link>
-            <Link to="/Settings" class={pages[2]} onClick={() => dispatch(switchPage("settings"))}>
-            <i aria-hidden="true" class="options icon"></i>
+            <Link to="/Settings" className={pages[2]} onClick={() => dispatch(switchPage("settings"))}>
+            <i aria-hidden="true" className="options icon"></i>
                 Settings</Link>
         </div>
     </div>

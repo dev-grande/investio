@@ -11,6 +11,7 @@ export function Dashboard() {
 
   useEffect(() => {
       dispatch(userActions.getAll());
+    //   dispatch(dataActions.getAllData(user.id));
   }, []);
 
   function handleDeleteUser(id) {
@@ -20,9 +21,11 @@ export function Dashboard() {
     return (    
     <div>
       <NavBar />
-      <div class="mt-4 container ui segment">
-            <h1>Hi {user.firstName}!</h1>
-            <h3>All registered users:</h3>
+      <br></br> <br></br>
+      <div className="mt-4 container ui segment">
+            <h1>Dashboard</h1>
+            <h2>Hi {user.firstName}!</h2>
+            {/* <h3>All registered users:</h3>
             {users.loading && <div class="ui active inline loader"></div>}
             {users.error && <span className="text-danger">ERROR: {users.error}</span>}
             {users.items &&
@@ -38,7 +41,7 @@ export function Dashboard() {
                         </li>
                     )}
                 </ul>
-            }
+            } */}
         </div>
     </div>
     );
