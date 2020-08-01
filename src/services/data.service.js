@@ -1,5 +1,8 @@
-import config from 'config';
 import { authHeader } from '../helpers';
+
+var config =  JSON.stringify({
+    apiUrl: 'http://localhost:4000'
+})
 
 export const dataService = {
     getData, 
@@ -72,8 +75,6 @@ function handleResponse(response) {
 }
 
 function parse(raw_data) {
-    console.log("parsing raw_data");
-    console.log(raw_data);
 
     var columns = raw_data[0].data;
 
@@ -84,8 +85,6 @@ function parse(raw_data) {
     var wanted_values =['DATE',  'AMOUNT',  'DESCRIPTION', 'SYMBOL'];
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     var current_month = "";
-    
-
     
     raw_data.slice(1).forEach(function (value, index) {
         //  DATE,  AMOUNT,  DESCRIPTION, SYMBOL

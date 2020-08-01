@@ -1,5 +1,5 @@
 // array in local storage for registered users
-import { test_data } from "../../data/demo_user"
+import { test_data } from "./demo_user"
 
 let users = JSON.parse(localStorage.getItem('users')) || [];
 if (!users.find(user => user.id === 12345)) {
@@ -138,10 +138,10 @@ export function configureFakeBackend() {
 
                 data.forEach(function (value, index) {
                     if (value.id === id) {
-                        data[index].years = value.years.filter(yr => yr != year)
+                        data[index].years = value.years.filter(yr => yr !== year)
                         data[index].data = value.data.filter(x => x.year !== year);
 
-                        if (value.selected_year == year && data[index].years.length > 0) {
+                        if (value.selected_year === year && data[index].years.length > 0) {
                             data[index].selected_year = data[index].years[0];
                         }
                         else {

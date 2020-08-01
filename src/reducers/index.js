@@ -5,8 +5,6 @@ import { registration } from './registration.reducer';
 import { users } from './users.reducer';
 import { alert } from './alert.reducer';
 import { data } from './data.reducer';
-
-import chartDataReducer from './chartDataSlice';
 import navigationReducer from "./navigationSlice";
 
 const rootReducer = combineReducers({
@@ -15,7 +13,6 @@ const rootReducer = combineReducers({
   users,
   alert,
   data,
-  chart_data: chartDataReducer,
   navigation: navigationReducer,
 });
 

@@ -15,8 +15,8 @@ export function Reports() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-      dispatch(dataActions.getAllData(user.id));
-  }, []);
+    if ( "id" in user ) {dispatch(dataActions.getAllData(user.id));}
+  }, [dispatch, user]);
 
   const data = useSelector(state => state.data);
 
@@ -64,7 +64,7 @@ export function Reports() {
           <div className="mt-4 container">    
 
 
-            {data.items && (data.items.data.length == 0 && <h3> No data found :(  Please upload data on the Settings Page. </h3>) }
+            {data.items && (data.items.data.length === 0 && <h3> No data found :(  Please upload data on the Settings Page. </h3>) }
 
             {data.items && (data.items.selected_year !== "" &&
                 <div>

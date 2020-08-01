@@ -18,7 +18,7 @@ export function RegisterPage() {
     // reset login status
     useEffect(() => {
         dispatch(userActions.logout());
-    }, []);
+    }, [dispatch]);
 
     function handleChange(e) {
         const { name, value } = e.target;
