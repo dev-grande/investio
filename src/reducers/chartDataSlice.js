@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+
 export const chartDataSlice = createSlice({
   name: 'chart_data',
   initialState: {
-    data: []
+    data: [],
   },
   reducers: {
     parse: (state, action) => {

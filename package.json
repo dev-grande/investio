@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/polyfill": "^7.10.4",
     "@nivo/line": "^0.62.0",
     "@reduxjs/toolkit": "^1.4.0",
     "@testing-library/jest-dom": "^4.2.4",
@@ -14,19 +15,19 @@
     "fomantic-ui-css": "^2.8.6",
     "react": "^16.13.1",
     "react-bootstrap": "^1.2.2",
+    "react-csv": "^2.0.3",
     "react-dom": "^16.13.1",
     "react-papaparse": "^3.4.0",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "redux": "^4.0.5",
-    "redux-logger": "^3.0.6",
-    "semantic-ui-react": "^0.88.2"
+    "redux-logger": "^3.0.6"
   },
   "scripts": {
-    "lint": "echo 'lint command'",
+    "lint": "eslint src/**/*.js",
     "start": "webpack-dev-server --open --mode development",
-    "build": "webpack --mode production",
+    "build": "webpack --mode development",
     "test": "npm run lint && react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -51,6 +52,8 @@
     "@babel/preset-react": "^7.10.4",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.6.0",
+    "eslint": "^7.6.0",
+    "eslint-plugin-react": "^7.20.5",
     "html-loader": "^1.1.0",
     "html-webpack-plugin": "^4.3.0",
     "redux-devtools": "^3.5.0",

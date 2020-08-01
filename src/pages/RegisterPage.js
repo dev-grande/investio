@@ -36,11 +36,11 @@ export function RegisterPage() {
 
     return (
         <div style={{backgroundColor: "#008080"}}>
-        <div class="container">
-        <div class="row justify-content-center align-items-center" style={{height: '100vh'}} >
-            <div class="col-4">
-                <div class="card">
-                    <div class="card-body">
+        <div className="container">
+        <div className="row justify-content-center align-items-center" style={{height: '100vh'}} >
+            <div className="col-4">
+                <div className="card">
+                    <div className="card-body">
                         <h2>Register</h2>
                         <form name="form" onSubmit={handleSubmit}>
                             <div className="form-group">
