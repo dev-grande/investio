@@ -1,6 +1,7 @@
-import config from 'config';
 import { authHeader } from '../helpers';
-
+var config =  JSON.stringify({
+    apiUrl: 'http://localhost:4000'
+})
 export const userService = {
     login,
     logout,

@@ -9,7 +9,7 @@ export function Dashboard() {
 
   useEffect(() => {
       dispatch(userActions.getAll());
-  }, []);
+  }, [dispatch]);
 
     return (    
     <div>

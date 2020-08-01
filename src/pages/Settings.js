@@ -18,8 +18,8 @@ export function Settings() {
 
     useEffect(() => {
       dispatch(userActions.getAll());
-      dispatch(dataActions.getAllData(user.id));
-    }, []);
+      if ( "id" in user ) {dispatch(dataActions.getAllData(user.id));}
+    }, [dispatch, user]);
 
     function handleDeleteUser(id) {
       dispatch(userActions.delete(id));
@@ -119,7 +119,8 @@ export function Settings() {
                             {
                                 user.deleting ? <em> - Deleting...</em>
                                 : user.deleteError ? <span className="text-danger"> - ERROR: {user.deleteError}</span>
-                                : <span> - <a onClick={() => handleDeleteUser(user.id)} className="text-primary">Delete</a></span>
+                                : <span> - <button className="ui icon button" onClick={() => handleDeleteUser(user.id)}>
+                                <i className="trash icon"></i></button></span>
                             }
                         </li>
                     )}
