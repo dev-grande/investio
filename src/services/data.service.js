@@ -4,7 +4,8 @@ import { authHeader } from '../helpers';
 export const dataService = {
     getData, 
     parse,
-    upload
+    upload,
+    delete: _delete
 };
 
 function getData(user_id) {
@@ -35,6 +36,22 @@ function upload(user_id, raw_data) {
         });
 }
 
+// prefixed function name with underscore because delete is a reserved word in javascript
+function _delete(id, year) {
+    const requestOptions = {
+        method: 'DELETE',
+        headers: authHeader(),
+        body: JSON.stringify({ id, year })
+    };
+
+    return fetch(`${config.apiUrl}/data`, requestOptions).then(handleResponse);
+}
+
+function logout() {
+    // remove user from local storage to log user out
+    localStorage.removeItem('user');
+}
+
 function handleResponse(response) {
     return response.text().then(text => {
         const data = text && JSON.parse(text);
@@ -59,7 +76,6 @@ function parse(raw_data) {
     console.log(raw_data);
 
     var columns = raw_data[0].data;
-    var rows = raw_data[1].data;
 
     var xy_data = Array(12);
     var full_data = [];
@@ -113,7 +129,5 @@ function parse(raw_data) {
 
     return { year, chart_data, full_data };
 }
-
-var colors = ["hsl(163, 70%, 50%)", "hsl(155, 70%, 50%)", "hsl(109, 70%, 50%)", "hsl(62, 70%, 50%)", "hsl(358, 70%, 50%)" ];
 
 

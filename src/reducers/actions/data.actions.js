@@ -1,12 +1,10 @@
-// import { userConstants } from '../constants';
 import { dataService } from '../../services';
-import { alertActions } from '.';
-import { findNonSerializableValue } from '@reduxjs/toolkit';
 
 export const dataActions = {
     getAllData,
     uploadData,
-    selectYear
+    selectYear,
+    delete: _delete
 };
 
 function uploadData(user_id, raw_data) {
@@ -15,9 +13,9 @@ function uploadData(user_id, raw_data) {
         dataService.upload(user_id, raw_data)
             .then(
                 updatedData => dispatch(update(updatedData)),
-                error => {
-                    console.log("error:  getAllData failed")
-                }
+                // error => {
+                //     console.log("error:  getAllData failed")
+                // }
             );
     };
 
@@ -35,19 +33,33 @@ function selectYear(selected_year) {
 
 function getAllData(user_id) {
     return dispatch => {
-        // dispatch(request());
+        dispatch(request());
 
         dataService.getData(user_id).then(
             data => dispatch(update(data)),
-            error => {
-                console.log("error:  getAllData failed")
-            }
+            // error => {
+            //     console.log("error:  getAllData failed")
+            // }
         );
     };
 
-    // function request() { return { type: userConstants.GETALL_REQUEST } }
+    function request() { return { type: "GETALL_REQUEST" } }
     function update(data) { 
-        console.log(data);
         return { type: "GETALL_SUCCESS", data }; }
     // function failure(error) { return { type: userConstants.GETALL_FAILURE, error } }
+}
+
+
+function _delete(id, year) {
+    console.log("deleting " + year);
+    return dispatch => {
+        dataService.delete(id, year)
+            .then(
+                data => dispatch(update(data)),
+                // error => console.log("error:  delete data failed")
+            );
+    };
+
+    function update(data) { 
+        return { type: "DELETION_SUCCESS", data }; }
 }

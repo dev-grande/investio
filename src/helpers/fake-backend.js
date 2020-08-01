@@ -1,6 +1,15 @@
 // array in local storage for registered users
+import { test_data } from "../../data/demo_user"
+
 let users = JSON.parse(localStorage.getItem('users')) || [];
+if (!users.find(user => user.id === 12345)) {
+    users.push({firstName: "Diana", lastName: "Grande", username: "testuser", password: "testuser", id: 12345})
+}
+
 let data = JSON.parse(localStorage.getItem('data')) || [];
+if (!data.find(user => user.id === 12345)) {
+    data.push(test_data);
+}
     
 export function configureFakeBackend() {
     let realFetch = window.fetch;
@@ -24,6 +33,8 @@ export function configureFakeBackend() {
                         return uploadData();
                     case url.endsWith('/data') && method === 'GET':
                         return getData();
+                    case url.endsWith('/data') && method === 'DELETE':
+                        return deleteData();
                     case url.match(/\/users\/\d+$/) && method === 'DELETE':
                         return deleteUser();
                     default:
@@ -70,7 +81,6 @@ export function configureFakeBackend() {
                 }
                 data.push(initialUserData);
                 localStorage.setItem('data', JSON.stringify(data));
-                
 
                 return ok();
             }
@@ -112,8 +122,39 @@ export function configureFakeBackend() {
                 if (!isLoggedIn()) return unauthorized();
     
                 users = users.filter(x => x.id !== idFromUrl());
+                data = data.filter(x => x.id !== idFromUrl());
+
                 localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('data', JSON.stringify(data));
                 return ok();
+
+                
+            }
+
+                
+            function deleteData() {
+                const { id, year } = body;
+                if (!isLoggedIn()) return unauthorized();
+
+                data.forEach(function (value, index) {
+                    if (value.id === id) {
+                        data[index].years = value.years.filter(yr => yr != year)
+                        data[index].data = value.data.filter(x => x.year !== year);
+
+                        if (value.selected_year == year && data[index].years.length > 0) {
+                            data[index].selected_year = data[index].years[0];
+                        }
+                        else {
+                            data[index].selected_year = "";
+                        }
+
+                        localStorage.setItem('data', JSON.stringify(data));
+                        return ok(value);
+                    }
+
+                });
+
+
             }
 
             // helper functions

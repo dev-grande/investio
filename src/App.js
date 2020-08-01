@@ -18,7 +18,7 @@ export function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-      history.listen((location, action) => {
+      history.listen(() => {
           // clear alert on location change
           dispatch(alertActions.clear());
       });

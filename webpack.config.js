@@ -2,6 +2,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     mode: 'development',
+    devtool: 'eval-cheap-source-map',
     resolve: {
         extensions: ['.js', '.jsx']
     },
