@@ -1,7 +1,8 @@
 import { authHeader } from '../helpers';
-var config =  JSON.stringify({
+const config =  {
     apiUrl: 'http://localhost:4000'
-})
+}
+
 export const userService = {
     login,
     logout,
@@ -27,7 +28,7 @@ function login(username, password) {
         .then(handleResponse)
         .then(user => {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
-            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('user', JSON.stringify(user.data));
 
             return user;
         });
@@ -70,7 +71,8 @@ async function register(user) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user)
     };
-
+    console.log( config );
+    console.log(JSON.stringify(user));
     return fetch(`${config.apiUrl}/users/register`, requestOptions).then(handleResponse);
 }
 
