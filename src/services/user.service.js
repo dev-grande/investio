@@ -12,7 +12,11 @@ export const userService = {
     delete: _delete
 };
 
+const bcrypt = require('bcryptjs');
+const saltRounds = 10;
+
 function login(username, password) {
+
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -51,8 +55,16 @@ function getById(id) {
 
     return fetch(`${config.apiUrl}/users/${id}`, requestOptions).then(handleResponse);
 }
-
-function register(user) {
+  
+async function register(user) {
+    const hashedPassword = await new Promise((resolve, reject) => {
+        bcrypt.hash(user.password, saltRounds, function(err, hash) {
+          if (err) reject(err)
+          resolve(hash)
+        });
+      })
+    user.password = hashedPassword;
+    console.log(user);
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
