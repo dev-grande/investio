@@ -1,8 +1,8 @@
 import { authHeader } from '../helpers';
 
-var config =  JSON.stringify({
+const config =  {
     apiUrl: 'http://localhost:4000'
-})
+}
 
 export const dataService = {
     getData, 

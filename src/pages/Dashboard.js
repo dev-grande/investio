@@ -17,7 +17,7 @@ export function Dashboard() {
       <br></br> <br></br>
       <div className="mt-4 container ui segment">
             <h1>Dashboard</h1>
-            <h2>Hi {user.firstName}!</h2>
+            <h2>Hi {user.firstname}!</h2>
         </div>
     </div>
     );

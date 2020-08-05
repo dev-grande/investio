@@ -7,8 +7,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'fomantic-ui-css/semantic.css';
 
 // setup fake backend
-import { configureFakeBackend } from './helpers';
-configureFakeBackend();
+// import { configureFakeBackend } from './helpers';
+// configureFakeBackend();
 
 ReactDOM.render(
     <Provider store={store}>
