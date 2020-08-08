@@ -45,13 +45,13 @@ function register(user) {
         userService.register(user)
             .then(
                 user => { 
-                    console.log(user);
+                    // console.log(user);
                     dispatch(success());
                     history.push('/login');
                     dispatch(alertActions.success('Registration successful'));
                 },
                 error => {
-                    console.log(error)
+                    // console.log(error)
                     dispatch(failure(error.toString()));
                     dispatch(alertActions.error(error.toString()));
                 }
@@ -87,7 +87,7 @@ function _delete(id) {
         userService.delete(id)
             .then(
                 user => {
-                    console.log(user);
+                    // console.log(user);
                     dispatch(success(id)) },
                 error => dispatch(failure(id, error.toString()))
             );
