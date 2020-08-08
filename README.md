@@ -1,5 +1,7 @@
 # frontend
 
+![Alt text](public/logo_name.png?raw=true "Div Graphs Logo")
+
 ## Table of Contents 
 
 - [Installation](#installation)
