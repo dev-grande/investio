@@ -1,15 +1,12 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { CSVReader } from 'react-papaparse'
-// import { parse } from '../reducers/chartDataSlice'
 import { Button } from 'react-bootstrap'
-
-// import { dataService } from "../services/data.service"
 import { dataActions } from '../reducers/actions';
 
 const buttonRef = React.createRef()
 
-function handleOnError(err, file, inputElem, reason){
+function handleOnError(err){
   console.log(err)
 }
 
@@ -20,7 +17,6 @@ function handleOpenDialog(e){
   }
 }
 
-// onFileLoad={(data, fileInfo) => dispatch(parse(data))}
 
 export function CSVUploader() {
     const dispatch = useDispatch();
@@ -29,16 +25,16 @@ export function CSVUploader() {
       <CSVReader
       ref={buttonRef}
       
-      onFileLoad={(data, fileInfo) => dispatch( dataActions.uploadData(user, data) )}
+      onFileLoad={(data) => dispatch( dataActions.uploadData(user, data) )}
       onError={e => handleOnError(e.err, e.file, e.inputElem, e.reason)}
       noClick
       noDrag
       noProgressBar
     >
-      {({ file }) => (
+      {() => (
          <Button variant="info" onClick={(e) => handleOpenDialog(e)}>
            Upload
          </Button>
        )}
     </CSVReader>  )
-};
+}

@@ -18,7 +18,7 @@ function login(username, password) {
         userService.login(username, password)
             .then(
                 user => { 
-                    dispatch(success(user));
+                    dispatch(success(user.data));
                     history.push('/');
                 },
                 error => {
@@ -84,7 +84,8 @@ function _delete(id) {
 
         userService.delete(id)
             .then(
-                user => dispatch(success(id)),
+                user => {
+                    dispatch(success(id)) },
                 error => dispatch(failure(id, error.toString()))
             );
     };

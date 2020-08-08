@@ -1,9 +1,9 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { CSVReader } from 'react-papaparse'
-import { parse } from '../reducers/chartDataSlice'
+import { dataActions } from '../reducers/actions';
 
-function handleOnError(err, file, inputElem, reason){
+function handleOnError(err){
   console.log(err)
 }
 
@@ -15,15 +15,17 @@ function handleOnRemoveFile(data){
 
 export function CSVUploaderDrag() {
     const dispatch = useDispatch();
+    const user = useSelector(state => state.authentication.user.id);
+
     return (
       <div>
       <CSVReader
-        onDrop={data => dispatch(parse(data))}
+        onDrop={data => dispatch( dataActions.uploadData(user, data) )}
         onError={e => handleOnError(e.err, e.file, e.inputElem, e.reason)}
         addRemoveButton
         onRemoveFile={data => handleOnRemoveFile(data)}
       >
-        <span>Drop CSV file here or click to upload.</span>
+        <span>Drop CSV file here to upload.</span>
       </CSVReader>
       </div>
     )

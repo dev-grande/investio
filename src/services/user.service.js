@@ -1,5 +1,7 @@
-import config from 'config';
 import { authHeader } from '../helpers';
+const config =  {
+    apiUrl: 'http://localhost:4000'
+}
 
 export const userService = {
     login,
@@ -22,7 +24,7 @@ function login(username, password) {
         .then(handleResponse)
         .then(user => {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
-            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('user', JSON.stringify(user.data));
 
             return user;
         });
@@ -68,7 +70,7 @@ function update(user) {
         body: JSON.stringify(user)
     };
 
-    return fetch(`${config.apiUrl}/users/${user.id}`, requestOptions).then(handleResponse);;
+    return fetch(`${config.apiUrl}/users/${user.id}`, requestOptions).then(handleResponse);
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript

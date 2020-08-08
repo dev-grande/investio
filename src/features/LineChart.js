@@ -1,13 +1,8 @@
 import React from 'react';
 import { ResponsiveLine } from '@nivo/line'
-// import { useSelector } from 'react-redux'
-// import { selectData } from '../reducers/chartDataSlice'
 
 export function LineChart ( props ) {
-    // const data = useSelector(selectData);
     var vals = props;
-    console.log(vals.data);
-    console.log(vals.year);
         return (
             <div style={{height: "50vh" , width: "100vh"}} className="m-auto row justify-content-center">
             <div className="row justify-content-center"><h3>Dividends {vals.year}</h3></div>
@@ -72,8 +67,6 @@ export function LineChart ( props ) {
                     }
                 ]}
             />
-
-
 
         </div>
         )

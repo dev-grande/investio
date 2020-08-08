@@ -35,11 +35,22 @@ $ yarn start
 
 - Create an account and upload your yearly dividends in the "Settings" page.  After uploading, your data should populate in the "Reports" page.
 
+> Docker setup
+```sh
+# build frontend app
+yarn build
+# build image
+docker build -t docker.pkg.github.com/invest-io/frontend/frontend:latest .
+# run image
+docker run --name=test -p 80:80 -td docker.pkg.github.com/invest-io/frontend/frontend:latest
+```
+
 ---
 
 ## Testing
-> To Do
-
+```shell
+$ yarn test
+```
 ---
 
 ## Login Flow
@@ -82,3 +93,5 @@ $ yarn start
             - Otherwise the user is added to the database and a success status is returned.
 
 ---
+
+

@@ -4,8 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { userActions } from '../reducers/actions';
 
-import { Alert } from 'react-bootstrap'
-
 export function LoginPage() {
     const [inputs, setInputs] = useState({
         username: '',
@@ -19,7 +17,7 @@ export function LoginPage() {
     // reset login status
     useEffect(() => { 
         dispatch(userActions.logout());
-    }, []);
+    }, [dispatch]);
 
     function handleChange(e) {
         const { name, value } = e.target;
@@ -38,10 +36,12 @@ export function LoginPage() {
     return (
     <div style={{backgroundColor: "#008080"}}>
     <div className="container">
+
         <div className="row justify-content-center align-items-center" style={{height: '100vh'}} >
             <div className="col-4">
                 <div className="card">
                     <div className="card-body">
+                        <p>Test User  -   username: testuser    password:  testuser</p>
                     <form name="form" onSubmit={handleSubmit}>
                         <div className="form-group">
                             <label>Username</label>
