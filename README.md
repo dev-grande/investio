@@ -2,6 +2,10 @@
 
 ![Alt text](public/logo_name.png?raw=true "Div Graphs Logo")
 
+<p align="center">
+  <img src="public/logo_name.png">
+</p>
+
 ## Table of Contents 
 
 - [Installation](#installation)
