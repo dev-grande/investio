@@ -18,7 +18,7 @@ export function Settings() {
 
     useEffect(() => {
       dispatch(userActions.getAll());
-      if ( "id" in user ) {dispatch(dataActions.getAllData(user.id));}
+      // if ( "id" in user ) {dispatch(dataActions.getAllData(user.id));}
     }, [dispatch, user]);
 
     function handleDeleteUser(id) {
@@ -40,8 +40,8 @@ export function Settings() {
             <h4>USER DATA</h4>
             <ul>
               <li>Username:  {user.username}</li>
-              <li>First Name:  {user.firstName}</li>
-              <li>Last Name:  {user.lastName}</li>
+              <li>First Name:  {user.firstname}</li>
+              <li>Last Name:  {user.lastname}</li>
               <li>User ID:  {user.id}</li>
             </ul>
           </div>
@@ -115,7 +115,7 @@ export function Settings() {
                 <ul>
                     {users.items.map((user) =>
                         <li key={user.id}>
-                            {user.firstName + ' ' + user.lastName}
+                            {user.firstname + ' ' + user.lastname}
                             {
                                 user.deleting ? <em> - Deleting...</em>
                                 : user.deleteError ? <span className="text-danger"> - ERROR: {user.deleteError}</span>
