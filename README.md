@@ -8,7 +8,7 @@
 
 - [Installation](#installation)
 - [Usage](#usage)
-- [Testing](#installation)
+- [Testing](#testing)
 - [Login Flow](#login)
 
 ---
