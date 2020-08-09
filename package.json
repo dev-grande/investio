@@ -12,6 +12,7 @@
     "bootstrap": "^4.5.0",
     "eslint": "^6.6.0",
     "fomantic-ui-css": "^2.8.6",
+    "js": "^0.1.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.2.2",
     "react-csv": "^2.0.3",

@@ -12,10 +12,13 @@ function uploadData(user_id, raw_data) {
 
         dataService.upload(user_id, raw_data)
             .then(
-                updatedData => dispatch(update(updatedData)),
-                // error => {
-                //     console.log("error:  getAllData failed")
-                // }
+                updatedData => {
+                    // dispatch(update(updatedData))
+                    console.log(updatedData);
+                },
+                error => {
+                    console.log("error:  getAllData failed")
+                }
             );
     };
 
@@ -55,7 +58,9 @@ function _delete(id, year) {
     return dispatch => {
         dataService.delete(id, year)
             .then(
-                data => dispatch(update(data)),
+                data => {
+                    dispatch(update(data))
+                }
                 // error => console.log("error:  delete data failed")
             );
     };

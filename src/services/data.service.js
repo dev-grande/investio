@@ -1,5 +1,4 @@
 import { authHeader } from '../helpers';
-
 const config =  {
     apiUrl: 'http://localhost:4000'
 }
@@ -22,19 +21,17 @@ function getData(user_id) {
 }
 
 function upload(user_id, raw_data) {
-    var parsed_data = parse(raw_data);
+    var upload_data = parse(raw_data, user_id);
 
     const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id, parsed_data })
+        headers: authHeader(),
+        body: JSON.stringify({ upload_data })
     };
 
     return fetch(`${config.apiUrl}/data/upload`, requestOptions)
         .then(handleResponse)
         .then(updatedData => {
-            // store user details and jwt token in local storage to keep user logged in between page refreshes
-            // localStorage.setItem('user', JSON.stringify(user));
             return updatedData;
         });
 }
@@ -74,59 +71,49 @@ function handleResponse(response) {
 
 }
 
-function parse(raw_data) {
+
+
+function parse(raw_data, user_id) {
 
     var columns = raw_data[0].data;
 
-    var xy_data = Array(12);
     var full_data = [];
-    var chart_data = []
-    var year = "";
-    var wanted_values =['DATE',  'AMOUNT',  'DESCRIPTION', 'SYMBOL'];
-    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    var current_month = "";
+    var wanted_values =['DATE', 'TRANSACTION ID', 'AMOUNT',  'DESCRIPTION', 'SYMBOL', 'QUANTITY', 'PRICE', 'REG FEE' ];
+
     
     raw_data.slice(1).forEach(function (value, index) {
         //  DATE,  AMOUNT,  DESCRIPTION, SYMBOL
         var rows = raw_data[index+1].data;
-        
-        if (rows && rows.length > 1 )
-        {
-            var data =  rows.reduce(function(data, field, index) {
-                if (wanted_values.find(val => val === columns[index])  && field) {
-                    if (columns[index] === "DATE") {
-                        var month_index = Number(field.substring(0,2)) - 1;
-                        current_month = month_index 
-                        year = field.substring(6,10);
-                    }
-                    if (columns[index] === "AMOUNT") {
-                        if (xy_data[current_month]){
-                            xy_data[current_month].y += Number(field); 
-                        }
-                        else {
-                            xy_data[current_month] = {"x": months[current_month], "y": Number(field) };
-                        }
 
+        if (rows && rows.length > 1 ) {
+            var data =  rows.reduce(function(data, field, index) {
+                data['user_id'] = user_id;
+                if (wanted_values.find(val => val === columns[index])  && field) {
+                    if (columns[index] === "DESCRIPTION") {
+                        data['type'] = "dividend";
                     }
-                    data[columns[index]] = field;
+                    else if (columns[index] === "DATE") {
+                        var date_array = field.split('/');
+                        data['date'] = date_array[2] + "-" + date_array[0] + "-" + date_array[1];
+                    }
+                    else if (columns[index] === "AMOUNT" || columns[index] === 'TRANSACTION ID') {
+                        data[columns[index].toLowerCase().replace(/ /g,"_")] = Number(field);;
+                    }
+                    else {
+                        data[columns[index].toLowerCase().replace(/ /g,"_")] = field;
+                    }
                 }
                 return data;
             }, {});
-
             full_data.push(data);
         }
     });
 
-    var val = {};
-    val["id"] = year;
-    val["color"] = "hsl(30, 96%, 52%)";
-    var filtered_xy = xy_data.filter(function (el) {
-        return el != null;
-      });
-    val["data"] = filtered_xy;
-    chart_data.push(val);
+    // for (var val in full_data) {
+    //     console.log(Object.values(full_data[val]));
+    // }
 
-    return { year, chart_data, full_data };
+    return { full_data };
 }
 
 
