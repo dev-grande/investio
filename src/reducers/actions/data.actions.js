@@ -3,8 +3,8 @@ import { dataService } from '../../services';
 export const dataActions = {
     getAllData,
     uploadData,
-    selectYear,
-    delete: _delete
+    delete: _delete,
+    getStockDiv
 };
 
 function uploadData(user_id, raw_data) {
@@ -13,7 +13,7 @@ function uploadData(user_id, raw_data) {
         dataService.upload(user_id, raw_data)
             .then(
                 updatedData => {
-                    // dispatch(update(updatedData))
+
                     console.log(updatedData);
                 },
                 error => {
@@ -22,17 +22,28 @@ function uploadData(user_id, raw_data) {
             );
     };
 
-    function update(data) { return { type: "UPLOAD_SUCCESS", data } }
+    // function update(data) { return { type: "UPLOAD_SUCCESS", data } }
 }
 
-function selectYear(selected_year) {
+function getStockDiv(user_id, symbol) {
     return dispatch => {
-        dispatch(select(selected_year))
+        dispatch(request());
+
+        dataService.getStockDiv(user_id, symbol).then(
+            data => {
+                dispatch(update(data));
+            },
+            error => {
+                console.log("error:  getAllData failed")
+            }
+        );
     };
 
-    function select(selected_year) { return { type: "SELECT_YEAR", selected_year } }
+    function request() { return { type: "GET_STOCK_DIV_REQUEST" } }
+    function update(data) { 
+        return { type: "GET_STOCK_DIV_SUCCESS", data }; }
+    // function failure(error) { return { type: userConstants.GETALL_FAILURE, error } }
 }
-
 
 function getAllData(user_id) {
     return dispatch => {

@@ -18,7 +18,7 @@ const NavBar = () => {
         </Nav>
         </Navbar>
 
-        <div className="ui teal vertical left fixed labeled icon menu" style={{top: "50px"}}>
+        <div className="ui vertical left fixed labeled icon menu" style={{top: "60px"}}>
             <Link to="/Dashboard" className={pages[0]} onClick={() => dispatch(switchPage("dashboard"))}>
                 <i aria-hidden="true" className="newspaper icon"></i>
                 Dashboard</Link>

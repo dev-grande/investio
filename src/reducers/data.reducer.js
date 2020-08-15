@@ -8,16 +8,25 @@ export function data(state = {}, action) {
       return {
         items: action.data
       };
-    case "UPLOAD_SUCCESS":
-        console.log(action.data);
-      return {
-          items: action.data
-      };
-    case "SELECT_YEAR":
+    // case "UPLOAD_SUCCESS":
+    //     console.log(action.data);
+    //   return {
+    //       items: action.data
+    //   };
+    case "GET_STOCK_DIV_REQUEST":
       return {
       ...state,
       items: { ...state.items,
-          selected_year: action.selected_year
+        loading: true
+      } 
+      };
+    case "GET_STOCK_DIV_SUCCESS":
+      return {
+      ...state,
+      items: { ...state.items,
+          individual_div: action.data.individual_div,
+          selected_stock: action.data.selected_stock,
+          loading: false
       } 
       };
     case "DELETION_SUCCESS":
