@@ -4,8 +4,6 @@ import { userActions, dataActions } from '../reducers/actions';
 import NavBar from '../features/NavBar'
 import { CSVUploader } from '../features/CSVUploader'
 import { CSVUploaderDrag } from "../features/CSVUploaderDrag"
-import { Button } from 'react-bootstrap'
-import { CSVLink } from "react-csv";
 
 export function Settings() {
 
@@ -63,46 +61,6 @@ export function Settings() {
                 Or
               </div>
             </div>
-          </div>
-
-
-          <div className="container ui segment">
-            <h4>DATA EXPORT</h4>
-            <p>Export yearly dividends data to CSV file.</p>
-            {data.loading && <div className="ui active inline loader mt-4"></div>}
-
-            {data.items && (data.items.data &&
-            <div className="table-responsive">
-            <table className="table m-0">
-            <thead>
-              <tr>
-                  <th scope="col">Dividend Year</th>
-                  <th scope="col"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.items.data.map((item, index) =>
-              <tr key={index}>
-                  <td>{item.year}</td>
-                  <td>
-                      <ul className="list-inline m-0">
-                          <li className="list-inline-item">
-                            <CSVLink data={item.chart_data[0].data} headers={headers}>
-                              <Button variant="info" > Export </Button>
-                            </CSVLink>
-                          </li>
-                          <li className="list-inline-item">
-                            <button className="ui icon button" onClick={() => handleDeleteData(user.id, item.year)}>
-                                <i className="trash icon"></i>
-                            </button>
-                          </li>
-                      </ul>
-                  </td>
-              </tr> )}
-          </tbody>
-          </table>
-          </div> )}
-
           </div>
 
 

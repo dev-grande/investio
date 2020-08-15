@@ -1,5 +1,7 @@
 import React from 'react';
 import { MDBDataTableV5 } from 'mdbreact';
+import { CSVLink } from "react-csv";
+import { Row, Button} from 'react-bootstrap';
 
 export function TablePagination(vals){
     if (vals.vals.length === 0) return (<div></div>);
@@ -40,6 +42,13 @@ export function TablePagination(vals){
         />
 
     {/* </div> */}
+
+    <Row>
+    <CSVLink data={vals.vals}>
+          <Button variant="info" size="sm"> Export </Button>
+          </CSVLink>
+
+    </Row>
     </div>
 
   );

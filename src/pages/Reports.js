@@ -4,6 +4,7 @@ import NavBar from '../features/NavBar'
 import { useSelector, useDispatch } from 'react-redux'
 import { dataActions } from '../reducers/actions';
 
+
 export function Reports() {
   const user = useSelector(state => state.authentication.user);
   const dispatch = useDispatch();
@@ -26,8 +27,12 @@ export function Reports() {
           <h1>Reports Page</h1>
           <div className="mt-4 container">
 
-          {data.items && (data.items.aggregated_div && <TablePagination vals={data.items.aggregated_div} title="Monthly Dividend Totals"/> ) }
+          {data.items && (data.items.aggregated_div && 
+          <TablePagination vals={data.items.aggregated_div} title="Monthly Dividend Totals"/>
+           ) }
           <br></br> <br></br>
+
+
  
           {data.items && (data.items.raw_div && <TablePagination vals={data.items.raw_div} title="Dividend Earnings"/> ) }
           <br></br> <br></br>
