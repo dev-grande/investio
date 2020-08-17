@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { userActions, dataActions } from '../reducers/actions';
+import { userActions } from '../reducers/actions';
 import NavBar from '../features/NavBar'
 import { CSVUploader } from '../features/CSVUploader'
 import { CSVUploaderDrag } from "../features/CSVUploaderDrag"
@@ -9,10 +9,8 @@ export function Settings() {
 
     const users = useSelector(state => state.users);
     const user = useSelector(state => state.authentication.user);
-    const data = useSelector(state => state.data);
+    // const data = useSelector(state => state.data);
     const dispatch = useDispatch();
-
-    const headers = [{ label: "MONTH", key: "x" }, { label: "AMOUNT", key: "y" }];
 
     useEffect(() => {
       dispatch(userActions.getAll());
@@ -23,9 +21,9 @@ export function Settings() {
       dispatch(userActions.delete(id));
     }
 
-    function handleDeleteData(id, year) {
-      dispatch(dataActions.delete(id, year));
-    }
+    // function handleDeleteData(id, year) {
+    //   dispatch(dataActions.delete(id, year));
+    // }
 
     return (    
       <div>

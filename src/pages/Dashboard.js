@@ -5,7 +5,6 @@ import {LineChart} from '../features/LineChart';
 import {BarChart} from '../features/BarChart';
 import NavBar from '../features/NavBar'
 import { CardDeck, Card, Container, Row, Col} from 'react-bootstrap';
-
 import { Table } from "../features/Table";
 
 function get_line_chart_data(data, keyx, keyy, title) {
@@ -32,17 +31,19 @@ function get_bar_chart_data(data, id, val) {
 }
 
 export function Dashboard() {
+
   const user = useSelector(state => state.authentication.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if ( "id" in user ) {dispatch(dataActions.getAllData(user.id));}
+    if ( "id" in user ) {dispatch(dataActions.getDashboardData(user.id));}
   }, [dispatch, user]);
 
   const data = useSelector(state => state.data);
 
   function stock_buttons(data) {
-    if ("items" in data) {
+    if ("items" in data) if("div_stocks" in data.items) { {
+      
         var stocks = data.items.div_stocks.map(val => {
           return val.symbol;
         })
@@ -70,9 +71,9 @@ export function Dashboard() {
           </div>
         );
         
-      }
+      } }
       return ( <div></div>)
-  }
+  } 
 
     return (    
     <div>

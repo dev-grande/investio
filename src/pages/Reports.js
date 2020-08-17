@@ -10,7 +10,7 @@ export function Reports() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if ( "id" in user ) {dispatch(dataActions.getAllData(user.id));}
+    if ( "id" in user ) {dispatch(dataActions.getReportsData(user.id));}
   }, [dispatch, user]);
 
   const data = useSelector(state => state.data);

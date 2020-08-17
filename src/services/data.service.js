@@ -4,20 +4,31 @@ const config =  {
 }
 
 export const dataService = {
-    getData, 
+    getDashboardData,
+    getReportsData,
     parse,
     upload,
     delete: _delete,
     getStockDiv
 };
 
-function getData(user_id) {
+function getDashboardData(user_id) {
     const requestOptions = {
         method: 'GET',
         headers: authHeader(),
     };
 
-    return fetch(`${config.apiUrl}/data/${user_id}`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/data/dashboard/${user_id}`, requestOptions).then(handleResponse);
+}
+
+
+function getReportsData(user_id) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader(),
+    };
+
+    return fetch(`${config.apiUrl}/data/reports/${user_id}`, requestOptions).then(handleResponse);
 }
 
 function upload(user_id, raw_data) {
@@ -51,8 +62,6 @@ function getStockDiv(user_id, symbol) {
             return new_data;
         });
 }
-
-getStockDiv(1, 'KO');
 
 // prefixed function name with underscore because delete is a reserved word in javascript
 function _delete(id, year) {
@@ -88,8 +97,6 @@ function handleResponse(response) {
     });
 
 }
-
-
 
 function parse(raw_data, user_id) {
 
