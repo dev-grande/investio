@@ -32,7 +32,8 @@ export function CSVUploader() {
       noProgressBar
     >
       {() => (
-         <Button variant="info" onClick={(e) => handleOpenDialog(e)}>
+         <Button variant="info" style={{fontSize: "13px", boxShadow: 'none', border: '0'}} 
+         onClick={(e) => handleOpenDialog(e)}>
            Upload
          </Button>
        )}

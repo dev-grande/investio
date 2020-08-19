@@ -8,9 +8,9 @@ function handleOnError(err){
 }
 
 function handleOnRemoveFile(data){
-  console.log('---------------------------')
-  console.log(data)
-  console.log('---------------------------')
+  // console.log('---------------------------')
+  // console.log(data)
+  // console.log('---------------------------')
 }
 
 export function CSVUploaderDrag() {

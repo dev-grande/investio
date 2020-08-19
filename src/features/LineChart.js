@@ -4,12 +4,13 @@ import { ResponsiveLine } from '@nivo/line'
 export function LineChart ( props ) {
     var vals = props;
         return (
-            <div style={{height: "50vh" , width: "100vh"}} className="m-auto row justify-content-center">
-            <div className="row justify-content-center"><h3>{vals.title}</h3></div>
+            <div style={vals.div} className="m-auto row justify-content-center">
+            <div style={{marginTop: '15px'}} className="row justify-content-center"><h3>{vals.title}</h3></div>
 
                 <ResponsiveLine
                 data={vals.data}
-                margin={{ top: 35, right: 110, bottom: 110, left: 60 }}
+                margin={vals.margin}
+                padding={0.3}
                 xScale={{
                     type: "time",
                     format: "%Y-%m-%d"
@@ -29,13 +30,15 @@ export function LineChart ( props ) {
                   }}
                   axisBottom={{
                     format: "%Y",
-                    tickValues: "every year"
+                    tickValues: "every year",
+                    tickSize: 5,
+                    tickPadding: 10,
                   }}
 
                 colors={{ scheme: 'set2' }}
-                pointSize={10}
+                pointSize={4}
                 pointColor={{ theme: 'background' }}
-                pointBorderWidth={2}
+                pointBorderWidth={4}
                 pointBorderColor={{ from: 'serieColor' }}
                 pointLabel="y"
                 pointLabelYOffset={-12}

@@ -1,5 +1,18 @@
 .App {
   text-align: center;
+  background-color: #F0F0F0;
+  color: black;
+  padding: 40px;
+  font-family: Arial;
+  text-align: center;
+}
+
+body {
+  background-color: #F0F0F0;
+  color: black;
+  padding: 40px;
+  font-family: Arial;
+  text-align: center;
 }
 
 .App-logo {

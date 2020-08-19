@@ -1,11 +1,19 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { dataActions } from '../reducers/actions';
-import {LineChart} from '../features/LineChart';
-import {BarChart} from '../features/BarChart';
+import { LineChart } from '../features/LineChart';
+import { BarChart } from '../features/BarChart';
+import  { Table }  from "../features/Table";
 import NavBar from '../features/NavBar'
-import { CardDeck, Card, Container, Row, Col} from 'react-bootstrap';
-import { Table } from "../features/Table";
+import logo from './logo_name.png';
+import { getDashboardNav, switchDashboardNav } from "../reducers/navigationSlice"
+import {  CardDeck, Card, 
+          Container, Row, Col, 
+          Nav, 
+          Image,
+          DropdownButton, Dropdown,
+          ButtonGroup } from 'react-bootstrap';
+
 
 function get_line_chart_data(data, keyx, keyy, title) {
   var result = []
@@ -33,6 +41,7 @@ function get_bar_chart_data(data, id, val) {
 export function Dashboard() {
 
   const user = useSelector(state => state.authentication.user);
+  const dashboard_nav = useSelector(getDashboardNav);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -42,7 +51,7 @@ export function Dashboard() {
   const data = useSelector(state => state.data);
 
   function stock_buttons(data) {
-    if ("items" in data) if("div_stocks" in data.items) { {
+    if ("items" in data) { if("div_stocks" in data.items) {
       
         var stocks = data.items.div_stocks.map(val => {
           return val.symbol;
@@ -58,104 +67,197 @@ export function Dashboard() {
         })
       
         return (
-          <div>
+          <Container>
             <br></br>
-            <div className="row justify-content-center">
-              {!data.items.selected_stock && <h4>Select a dividend stock below to see your stock's dividend history.</h4>}
-              <div className="ui buttons">
-                { stock_b.map((stock, index) =>
-                      <button key={index} className={stock.ui} onClick={() => dispatch(dataActions.getStockDiv(user.id, stock.stock))}>{stock.stock}</button> )}
-              </div>         
-            </div>
+              {!data.items.selected_stock && 
+              <Row className="text-center mb-3">
+                <Col>
+                <div>                
+                  <h4>Select a dividend stock from the drowdown below to see your stock's dividend history.</h4>
+                </div>
+
+                </Col>
+              </Row>
+              }
+
+              <Row className="text-center">
+                <Col>
+                  <DropdownButton
+                      as={ButtonGroup}
+                      key="stocks"
+                      id='dropdown-button-drop-stocks'
+                      variant="light"
+                      title={data.items.selected_stock}
+                      style={{fontSize: "10px", boxShadow:'none'}}
+                    >
+                      { stock_b.map((stock, index) =>
+                      <Dropdown.Item eventKey={index} 
+                        className={stock.ui} 
+                        onSelect={() => 
+                        dispatch(dataActions.getStockDiv(user.id, stock.stock))}>{stock.stock}
+                      </Dropdown.Item> )}
+                    </DropdownButton>
+               
+                </Col>
+              </Row>
             <br></br> <br></br>
-          </div>
+          </Container>
         );
         
       } }
       return ( <div></div>)
   } 
 
+
+    const styles = {
+      container: { 
+        marginTop: '40px',
+        width: '100%',
+        height: '100%',
+        marginLeft: '65px',
+        paddingLeft: '55px',
+        paddingRight: '90px'
+      },
+
+      monthly_margin: { top: 60, right: 60, bottom: 130, left: 70 },
+      monthly_div: { height: "66vh" , width: "50vw"},
+
+      stock_margin: { top: 40, right: 40, bottom: 80, left: 70 },
+      stock_div: { height: "57vh" , width: "50vw"}
+
+
+    }
+
+
     return (    
-    <div>
+
+  <div >
       <NavBar />
       <br></br> <br></br>
-      <div className="mt-4 container ui segment">
-            <h1>Dashboard</h1>
-            <h2>Hi {user.firstname}!</h2>
-      <Container>
+      <Container fluid style={styles.container}>
 
-    { data.items && 
-    ( data.items.div_total &&
-      <Row className="justify-content-center mb-4">
-            <CardDeck>
-              <Card className="text-center">
-                <Card.Body>
-                  <Card.Title><b>Cash Value: </b>  </Card.Title>
-                  <Card.Text>${data.items.cash_value[0].sum}</Card.Text>
-                </Card.Body>
-              </Card>
+      {data.items && !data.items.div_total &&
+      <div className="ui active inverted dimmer">
+                <div className="ui text loader">Loading</div>
+            </div> }
 
-              <Card className="text-center">
-                <Card.Body>
-                  <Card.Title><b>Total Invested: </b>  </Card.Title>
-                  <Card.Text>${data.items.invested[0].sum*-1}</Card.Text>
-                </Card.Body>
-              </Card>
-            
 
-              <Card className="text-center">
-                <Card.Body>
-                  <Card.Title><b>Dividend Earnings: </b>  </Card.Title>
-                  <Card.Text>${data.items.div_total[0].amount}</Card.Text>
-                </Card.Body>
-              </Card>
-            </CardDeck>
-      </Row>
+      { data.items && 
+      ( data.items.div_total &&
+        <Row>
+          <Col>
+              <CardDeck>
+                <Card className="text-center" style={{height:'12vh'}}>
+                <Card.Header>Cash Value:</Card.Header>
+                  <Card.Body>
+                    <h1 style={{fontSize: '2.7vh'}}>${data.items.cash_value.toLocaleString('en')}</h1>
+                  </Card.Body>
+                </Card>
 
-    )}
+                <Card className="text-center" style={{height:'12vh'}}>
+                <Card.Header>Stock Value: </Card.Header>
+                  <Card.Body>
+                    <h1 style={{fontSize: '2.7vh'}}>${data.items.invested.toLocaleString('en')}</h1>
+                  </Card.Body>
+                </Card>
+
+                <Card className="text-center" style={{height:'12vh'}}>
+                <Card.Header>Account Value: </Card.Header>
+                  <Card.Body>
+                    <h1 style={{fontSize: '2.7vh'}}>${data.items.account_value.toLocaleString('en')}</h1>
+                  </Card.Body>
+                </Card>
+
+                <Card className="text-center" style={{height:'12vh'}}>
+                <Card.Header>Dividend Earnings: </Card.Header>
+                  <Card.Body>
+                    <h1 style={{fontSize: '2.7vh'}}>${data.items.div_total.toLocaleString('en')}</h1>
+                  </Card.Body>
+                </Card>
+
+
+                <Card className="text-center" style={{height:'12vh'}}>
+                <Card.Header>Need to Find: </Card.Header>
+                  <Card.Body>
+                    <h1 style={{fontSize: '2.7vh'}}>$1,234.56</h1>
+                  </Card.Body>
+                </Card>
+              
+              </CardDeck>
+              </Col>
+        </Row>
+      )}
 
 { data.items && 
-    ( data.items.current_stocks &&
-      <Row className="justify-content-center">
-        <Col xs={9} className="m-4">
-          <BarChart data= {get_bar_chart_data(data.items.current_stocks, 'symbol', 'quantity')}/>
-        </Col>
-        <Col className="m-4">
-          <Table vals={data.items.current_stocks} />
-        </Col>
-      </Row>
-    )}
+      ( data.items.current_stocks && data.items.aggregated &&
+  <Row className='mt-4'>
+    <Col xs={7}>
+      <Card style={{height: '75.4vh'}} >
+        <Card.Header>
+          <Nav variant="tabs" defaultActiveKey={dashboard_nav} onSelect={(selectedKey) => dispatch(switchDashboardNav(selectedKey))} >
+            <Nav.Item>
+              <Nav.Link eventKey="monthly">Monthly Dividends</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="stock">Stock Dividends</Nav.Link>
+            </Nav.Item>
+          </Nav>
+        </Card.Header>
+        <Card.Body>
 
-    { data.items && 
-    ( data.items.aggregated &&
-      <Row className="justify-content-center">
-          <LineChart data={get_line_chart_data(data.items.aggregated, 'date', 'amount', 'dividend earnings')}
-                      title="Monthly Dividend Earnings" />
-      </Row>
-    )}
+          {dashboard_nav==='monthly' && 
+            <LineChart data={get_line_chart_data(data.items.aggregated, 'date', 'amount', 'dividend earnings')}
+            title="Monthly Dividend Earnings" div={styles.monthly_div} margin={styles.monthly_margin} /> }
 
+          {dashboard_nav==='stock' && data.items && (
+            data.items.selected_stock && data.items.individual_div &&
+            <div>
+                <LineChart data={get_line_chart_data(data.items.individual_div, 'date', 'amount', 'dividend earnings')}
+                            title={"Dividend Earnings for " + data.items.selected_stock} 
+                            div={styles.stock_div} margin={styles.stock_margin} />
+                
+            </div> )} 
 
-    {stock_buttons(data)}
+          {dashboard_nav==='stock' && stock_buttons(data) }
 
-    {data.items && (
-      data.items.selected_stock && data.items.individual_div &&
-      <Row className="justify-content-center">
-          <LineChart data={get_line_chart_data(data.items.individual_div, 'date', 'amount', 'dividend earnings')}
-                      title={"Dividend Earnings for " + data.items.selected_stock} />
-      </Row>
-      
-    )}
+        </Card.Body>
+      </Card>
+    </Col>
 
+    <Col>
+        <Row>
+          <Col>
+            <Card style={{height: '43vh'}}>
+            <Card.Body>
+                <BarChart data= {get_bar_chart_data(data.items.current_stocks, 'symbol', 'amount')}/>
+              </Card.Body>
+            </Card>
+          </Col>
 
+          <Col className="mt-4">
+            <Card style={{height: '30vh'}}>
+            <Card.Body>
+              <Table vals={data.items.current_stocks} />
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+    </Col>
 
+  </Row>
+      )}  
 
-
+  {data.items && !data.items.loading &&
+  <Row className="text-center pb-4" style={{marginTop: '12vh'}}> 
+    <Col>
+      <Image src={logo} style={{height: '18vh', border: '1px'}} className='p-2 m-3'/>
+    </Col>
+  </Row> }
 
 </Container>
 
-      </div>
+</div>
 
-    </div>
     );
   
 }

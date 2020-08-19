@@ -14,6 +14,7 @@ export function data(state = {}, action) {
           div_total: action.data.div_total,
           aggregated: action.data.aggregated,
           cash_value: action.data.cash_value,
+          account_value: action.data.account_value,
           invested: action.data.invested,
           current_stocks: action.data.current_stocks,
           div_stocks: action.data.div_stocks,
@@ -42,8 +43,7 @@ export function data(state = {}, action) {
     case "GET_STOCK_DIV_REQUEST":
       return {
       ...state,
-      items: { ...state.items,
-        loading: true
+      items: { ...state.items
       } 
       };
     case "GET_STOCK_DIV_SUCCESS":
@@ -51,8 +51,7 @@ export function data(state = {}, action) {
       ...state,
       items: { ...state.items,
           individual_div: action.data.individual_div,
-          selected_stock: action.data.selected_stock,
-          loading: false
+          selected_stock: action.data.selected_stock
       } 
       };
     case "DELETION_SUCCESS":

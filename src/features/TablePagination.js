@@ -21,16 +21,8 @@ export function TablePagination(vals){
  
   return (
 <div>
-    <div className="row justify-content-center">
-
-        <h3>{vals.title}</h3> 
-    </div> 
-
-    {/* <div className="row justify-content-center"> */}
-
         <MDBDataTableV5
         hover 
-        // bordered
         small
         entriesOptions={[5, 10, 20, 25]} 
         entries={10} 
@@ -39,13 +31,12 @@ export function TablePagination(vals){
         pagingTop
         searchTop
         searchBottom={false}
+        sortable={false}
         />
-
-    {/* </div> */}
 
     <Row>
     <CSVLink data={vals.vals}>
-          <Button variant="info" size="sm"> Export </Button>
+          <Button variant="light" style={{fontSize: "13px", boxShadow: 'none', border: '0'}}> Export </Button>
           </CSVLink>
 
     </Row>
