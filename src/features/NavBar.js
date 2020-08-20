@@ -4,6 +4,7 @@ import { Navbar, Nav } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import { getPages, switchPage } from "../reducers/navigationSlice"
 import { useDispatch } from 'react-redux'
+import logo from '../images/logo_square.png'
 
 const NavBar = () => {
     const pages = useSelector(getPages);
@@ -12,7 +13,17 @@ const NavBar = () => {
     return (
     <div>
         <Navbar fixed="top" bg="dark" expand="sm" variant="dark" >
-        <Navbar.Brand bg="light" href="#home">Div Graphs</Navbar.Brand>
+        <Navbar.Brand bg="light" href="#home">
+        Div Graphs{' '}
+        <img
+            alt="logo"
+            src={logo}
+            width="30"
+            height="30"
+            className="mx-2"
+        />
+        </Navbar.Brand>
+
         <Nav className="ml-auto">
             <Link className="btn btn-info" role="button" to="/login" style={{fontSize:'13px'}}>Logout</Link>
         </Nav>

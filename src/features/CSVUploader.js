@@ -17,6 +17,12 @@ function handleOpenDialog(e){
   }
 }
 
+function handleUpload(user_id, data, dispatch)
+{
+  dispatch( dataActions.uploadData(user_id, data) );
+  dispatch(dataActions.getYears(user_id));
+}
+
 
 export function CSVUploader() {
     const dispatch = useDispatch();
@@ -24,8 +30,7 @@ export function CSVUploader() {
     return (
       <CSVReader
       ref={buttonRef}
-      
-      onFileLoad={(data) => dispatch( dataActions.uploadData(user, data) )}
+      onFileLoad={(data) => handleUpload(user, data, dispatch)}
       onError={e => handleOnError(e.err, e.file, e.inputElem, e.reason)}
       noClick
       noDrag

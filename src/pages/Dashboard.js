@@ -5,7 +5,7 @@ import { LineChart } from '../features/LineChart';
 import { BarChart } from '../features/BarChart';
 import  { Table }  from "../features/Table";
 import NavBar from '../features/NavBar'
-import logo from './logo_name.png';
+import logo from '../images/logo_name.png';
 import { getDashboardNav, switchDashboardNav } from "../reducers/navigationSlice"
 import {  CardDeck, Card, 
           Container, Row, Col, 
@@ -13,7 +13,6 @@ import {  CardDeck, Card,
           Image,
           DropdownButton, Dropdown,
           ButtonGroup } from 'react-bootstrap';
-
 
 function get_line_chart_data(data, keyx, keyy, title) {
   var result = []
@@ -25,7 +24,6 @@ function get_line_chart_data(data, keyx, keyy, title) {
   }
   return [{id: title, data: result}];
 }
-
 
 function get_bar_chart_data(data, id, val) {
   var result = [];
@@ -108,13 +106,13 @@ export function Dashboard() {
       return ( <div></div>)
   } 
 
-
     const styles = {
       container: { 
-        marginTop: '40px',
+        marginTop: '30px',
         width: '100%',
         height: '100%',
-        marginLeft: '65px',
+        minHeight: '100vh',
+        marginLeft: '68px',
         paddingLeft: '55px',
         paddingRight: '90px'
       },
@@ -125,9 +123,7 @@ export function Dashboard() {
       stock_margin: { top: 40, right: 40, bottom: 80, left: 70 },
       stock_div: { height: "57vh" , width: "50vw"}
 
-
     }
-
 
     return (    
 
@@ -136,11 +132,10 @@ export function Dashboard() {
       <br></br> <br></br>
       <Container fluid style={styles.container}>
 
-      {data.items && !data.items.div_total &&
+      {data.items && !data.items.div_total && data.items.loading &&
       <div className="ui active inverted dimmer">
                 <div className="ui text loader">Loading</div>
             </div> }
-
 
       { data.items && 
       ( data.items.div_total &&
@@ -174,7 +169,6 @@ export function Dashboard() {
                     <h1 style={{fontSize: '2.7vh'}}>${data.items.div_total.toLocaleString('en')}</h1>
                   </Card.Body>
                 </Card>
-
 
                 <Card className="text-center" style={{height:'12vh'}}>
                 <Card.Header>Need to Find: </Card.Header>
@@ -215,7 +209,6 @@ export function Dashboard() {
                 <LineChart data={get_line_chart_data(data.items.individual_div, 'date', 'amount', 'dividend earnings')}
                             title={"Dividend Earnings for " + data.items.selected_stock} 
                             div={styles.stock_div} margin={styles.stock_margin} />
-                
             </div> )} 
 
           {dashboard_nav==='stock' && stock_buttons(data) }
@@ -235,7 +228,7 @@ export function Dashboard() {
           </Col>
 
           <Col className="mt-4">
-            <Card style={{height: '30vh'}}>
+            <Card style={{height: '29.8vh'}}>
             <Card.Body>
               <Table vals={data.items.current_stocks} />
               </Card.Body>

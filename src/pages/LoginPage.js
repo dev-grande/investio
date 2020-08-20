@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { userActions } from '../reducers/actions';
+import logo from '../images/logo_name.png';
+import { Image } from 'react-bootstrap';
 
 export function LoginPage() {
     const [inputs, setInputs] = useState({
@@ -41,6 +42,7 @@ export function LoginPage() {
             <div className="col-4">
                 <div className="card">
                     <div className="card-body">
+                        <div className="text-center"> <Image src={logo} style={{height: '20vh', border: '1px'}} className='p-2 m-3'/></div>
                         <p>Test User  -   username: testuser    password:  testuser</p>
                     <form name="form" onSubmit={handleSubmit}>
                         <div className="form-group">

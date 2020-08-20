@@ -13,6 +13,12 @@ function handleOnRemoveFile(data){
   // console.log('---------------------------')
 }
 
+function handleUpload(user_id, data, dispatch)
+{
+  dispatch( dataActions.uploadData(user_id, data) );
+  dispatch(dataActions.getYears(user_id));
+}
+
 export function CSVUploaderDrag() {
     const dispatch = useDispatch();
     const user = useSelector(state => state.authentication.user.id);
@@ -20,7 +26,7 @@ export function CSVUploaderDrag() {
     return (
       <div>
       <CSVReader
-        onDrop={data => dispatch( dataActions.uploadData(user, data) )}
+        onDrop={data => handleUpload(user, data, dispatch)}
         onError={e => handleOnError(e.err, e.file, e.inputElem, e.reason)}
         addRemoveButton
         onRemoveFile={data => handleOnRemoveFile(data)}

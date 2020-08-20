@@ -35,7 +35,7 @@ export function TablePagination(vals){
         />
 
     <Row>
-    <CSVLink data={vals.vals}>
+    <CSVLink data={vals.vals} filename={vals.export_name}>
           <Button variant="light" style={{fontSize: "13px", boxShadow: 'none', border: '0'}}> Export </Button>
           </CSVLink>
 

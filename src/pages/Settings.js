@@ -4,10 +4,9 @@ import { userActions, dataActions } from '../reducers/actions';
 import NavBar from '../features/NavBar'
 import { CSVUploader } from '../features/CSVUploader'
 import { CSVUploaderDrag } from "../features/CSVUploaderDrag"
-import logo from './logo_name.png';
+import logo from '../images/logo_name.png';
 import { Image, Card, Container, Row, Col, Button, ListGroup, CardDeck} from 'react-bootstrap';
-
-import user_image from './user_image.png';
+import user_image from '../images/user_image.png';
 
 export function Settings() {
 
