@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { userActions } from '../reducers/actions';
+import { userActions, dataActions } from '../reducers/actions';
 import NavBar from '../features/NavBar'
 import { CSVUploader } from '../features/CSVUploader'
 import { CSVUploaderDrag } from "../features/CSVUploaderDrag"
-import { Image, Card, Container, Row, Col, Button, ListGroup} from 'react-bootstrap';
+import logo from './logo_name.png';
+import { Image, Card, Container, Row, Col, Button, ListGroup, CardDeck} from 'react-bootstrap';
 
 import user_image from './user_image.png';
 
@@ -12,30 +13,25 @@ export function Settings() {
 
     const users = useSelector(state => state.users);
     const user = useSelector(state => state.authentication.user);
-    // const data = useSelector(state => state.data);
+    const data = useSelector(state => state.data);
     const dispatch = useDispatch();
 
     useEffect(() => {
       dispatch(userActions.getAll());
-      // if ( "id" in user ) {dispatch(dataActions.getAllData(user.id));}
+      if ( "id" in user ) {dispatch(dataActions.getYears(user.id));}
     }, [dispatch, user]);
 
     function handleDeleteUser(id) {
       dispatch(userActions.delete(id));
     }
 
-    // function handleDeleteData(id, year) {
-    //   dispatch(dataActions.delete(id, year));
-    // }
-
-
     const styles = {
       container: { 
         backgroundColor: '#F0F0F0', 
         marginTop: '40px',
         width: '100%',
-        height: '100vh',
-        // marginLeft: '65px',
+        height: '100%',
+        minHeight: '100vh',
         paddingLeft: '20vh',
         paddingRight: '8vh'
       },
@@ -116,12 +112,40 @@ export function Settings() {
             <Col xs={9}>
             <Card style={{height:'35vh'}}>
                 <Card.Header><h4>EDIT DATA</h4></Card.Header>
+
                 <Card.Body>
+                <p>Listed below are the year(s) of your transaction data.
+                  Click delete for the corresponding year to delete that year's transactions.
+                </p>
+ 
+                    <CardDeck>
+                      {data.items && data.items.years &&
+                        data.items.years.map((year) =>
+                        <Card className="text-center" key={year.year}>
+                        <Card.Header>Transaction Data for:</Card.Header>
+                          <Card.Body>
+                            <h1 style={{fontSize: '2.7vh'}}>{year.year}</h1>
+                            <Button variant="light" style={{fontSize: "10px", boxShadow:'none'}} key={year.year}
+                            onClick={() => dispatch(dataActions.deleteYear(user.id, year.year))}>
+                                        Delete</Button>
+                          </Card.Body>
+                        </Card>                    
+                       ) } 
+                    </CardDeck>
+
                 </Card.Body>
               </Card>
 
             </Col>
           </Row>
+
+          {data.items && !data.items.loading &&
+          <Row className="text-center pb-4" style={{marginTop: '12vh'}}> 
+            <Col>
+              <Image src={logo} style={{height: '18vh', border: '1px'}} className='p-2 m-3'/>
+            </Col>
+          </Row> }
+
         </Container>
       </div>
 

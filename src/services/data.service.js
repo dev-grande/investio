@@ -8,9 +8,30 @@ export const dataService = {
     getReportsData,
     parse,
     upload,
-    delete: _delete,
-    getStockDiv
+    deleteYear,
+    getStockDiv,
+    getYears
 };
+
+function deleteYear(user_id, year) {
+    const requestOptions = {
+        method: 'DELETE',
+        headers: authHeader(),
+        body: JSON.stringify({ user_id, year })
+    };
+
+    return fetch(`${config.apiUrl}/data/delete`, requestOptions).then(handleResponse);
+}
+
+function getYears(user_id) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader(),
+    };
+
+    return fetch(`${config.apiUrl}/data/years/${user_id}`, requestOptions).then(handleResponse);
+}
+
 
 function getDashboardData(user_id) {
     const requestOptions = {
@@ -61,17 +82,6 @@ function getStockDiv(user_id, symbol) {
             new_data.selected_stock = symbol;
             return new_data;
         });
-}
-
-// prefixed function name with underscore because delete is a reserved word in javascript
-function _delete(id, year) {
-    const requestOptions = {
-        method: 'DELETE',
-        headers: authHeader(),
-        body: JSON.stringify({ id, year })
-    };
-
-    return fetch(`${config.apiUrl}/data`, requestOptions).then(handleResponse);
 }
 
 function logout() {

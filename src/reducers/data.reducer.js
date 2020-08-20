@@ -7,6 +7,7 @@ export function data(state = {}, action) {
         loading: true
       } 
       };
+      
     case "GET_DASHBOARD_SUCCESS":
       return {
       ...state,
@@ -29,6 +30,7 @@ export function data(state = {}, action) {
         loading: true
       } 
       };
+
     case "GET_REPORTS_SUCCESS":
       return {
       ...state,
@@ -46,6 +48,7 @@ export function data(state = {}, action) {
       items: { ...state.items
       } 
       };
+
     case "GET_STOCK_DIV_SUCCESS":
       return {
       ...state,
@@ -54,17 +57,24 @@ export function data(state = {}, action) {
           selected_stock: action.data.selected_stock
       } 
       };
-    case "DELETION_SUCCESS":
-      console.log(action.data);
+
+    case "GET_YEARS_SUCCESS":
       return {
-        items: action.data
+      ...state,
+      items: { ...state.items,
+          years: action.data
+      } 
       };
 
-    // case "UPLOAD_SUCCESS":
-    //     console.log(action.data);
-    //   return {
-    //       items: action.data
-    //   };
+    case 'DELETE_YEAR_SUCCESS':
+      // remove deleted year from state
+      return {
+        ...state,
+        items: { ...state.items,
+            years: state.items.years.filter(year => year.year !== action.year)
+        } 
+      };
+
     default:
       return state
   }

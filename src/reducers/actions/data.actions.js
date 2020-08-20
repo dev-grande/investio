@@ -4,7 +4,8 @@ export const dataActions = {
     getDashboardData,
     getReportsData,
     uploadData,
-    delete: _delete,
+    getYears,
+    deleteYear,
     getStockDiv
 };
 
@@ -80,18 +81,26 @@ function getReportsData(user_id) {
 }
 
 
-function _delete(id, year) {
-    console.log("deleting " + year);
+function getYears(user_id) {
     return dispatch => {
-        dataService.delete(id, year)
+        dataService.getYears(user_id)            
+        .then(data => {
+                dispatch(update(data))
+            }
+        );
+    };
+    function update(data) { 
+        return { type: "GET_YEARS_SUCCESS", data }; }}
+
+
+function deleteYear(id, year) {
+    return dispatch => {
+        dataService.deleteYear(id, year)
             .then(
-                data => {
-                    dispatch(update(data))
-                }
-                // error => console.log("error:  delete data failed")
+                resp => {
+                    console.log(year)
+                    dispatch(success(year)) },
             );
     };
-
-    function update(data) { 
-        return { type: "DELETION_SUCCESS", data }; }
+    function success(year) { return { type: "DELETE_YEAR_SUCCESS", year } }
 }
