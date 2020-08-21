@@ -1,101 +1,86 @@
-# frontend
-
 <p align="center">
-  <img src="public/logo_name.png">
+  <img src="https://drive.google.com/uc?export=view&id=1z9_X5uvEfuPqrVxRbAWlLlviN9PdhcCp">
 </p>
-
-## Table of Contents 
-
-- [Installation](#installation)
-- [Usage](#usage)
-- [Testing](#testing)
-- [Login Flow](#login)
 
 ---
 
-## Installation
+## Background
 
-### Clone
-
-- Clone this repo to your local machine using `https://https://github.com/invest-io/frontend`
-
-### Setup
-
-> In /frontend directory, now install the necessary dependencies using yarn
-
-```shell
-$ yarn
-```
+Div Graphs is a web application that helps you visualize and comprehend your investment portfolio using imported transaction data.  Upon creating an account, you can upload your transaction data through .csv files and view the visualized data on the dashboard page. Your current stocks owned, dividend earnings history and overall portfolio information are shown on this page. The frontend part of this project was developed with with React, Redux, Javascript, and Docker.
 
 ---
 
 ## Usage
 
-> After set up, now start the application
+### Register and Login
+<p align="left">
+  <img src="https://drive.google.com/uc?export=view&id=1UIw0fZGlRGl7YWP6r5bFiNLnuSxrTXm7" height="600">
+</p>
+  
+<br />
 
-```shell
-$ yarn start
-```
+### Import CSV transaction data from TD Ameritrade [Settings Page]
 
-- Create an account and upload your yearly dividends in the "Settings" page.  After uploading, your data should populate in the "Reports" page.
+<br />
 
-> Docker setup
+**TD Ameritrade download CSV**
+* Export your transaction data by year to a .csv using the 'Download' feature under your TD Ameritrade History and Statements.
+<p align="left">
+  <img src="https://drive.google.com/uc?export=view&id=1_lhrSOvZsH3gorflFFKG4oLMu2DSkVjo" height="370">
+</p>
+<br /><br />
+
+**[Settings Page]  -  Data Import and Edit**
+<br />
+
+  - Using the .csv file that you downloaded from Ameritrade, you can import the file under "DATA IMPORT" by either:
+      - Click and selecting the file 
+      - Drag and dropping the file
+  - Once uploaded, the years corresponding to the file should show in the "EDIT DATA" section.
+
+<p align="left">
+  <img src="https://drive.google.com/uc?export=view&id=1ev172uFsCBz3D410qfo8W5Gjha85A67Y" height="600">
+</p>
+
+<br />
+
+### Overview of transaction data [Dashboard Page]
+
+- After importing your transaction data, a visualization and overview of the transactions can be seen below in the Dashboard Page.  
+<p align="left">
+  <img src="https://drive.google.com/uc?export=view&id=1Nf_3mpI8K8UWGHu-e8-_SBF67hVWpnjA" height="650">
+</p>
+
+<br />
+
+### View transactions and export data [Reports Page]
+
+- The reports page shows the data in table form, in which each table has the option to be exported into a .csv file.
+<p align="left">
+  <img src="https://drive.google.com/uc?export=view&id=1ngco-o0Pj2OcjTdpksrZgBGg3SwC5UQL" height="400">
+</p>
+
+<br />
+
+---
+
+## Development
+
+### Setup Locally
+
+> Make sure backend image and container is running first.
+
+* Install [docker](https://www.docker.com/get-started) dependency
+* Clone the frontend repo to your local machine:
 ```sh
-# build frontend app
-yarn build
+git clone git@github.com:invest-io/frontend.git
+```
+* Build and run image in the frontend directory:
+```sh
 # build image
 docker build -t docker.pkg.github.com/invest-io/frontend/frontend:latest .
 # run image
 docker run --name=test -p 80:80 -td docker.pkg.github.com/invest-io/frontend/frontend:latest
 ```
 
----
-
-## Testing
-```shell
-$ yarn test
-```
----
-
-## Login Flow
-
-> The login flow starts on the "Login" page, where you can redirect to the "Register" page if you need to create an account.  Below are two diagrams that show the login and register process.
-
-### Login Process
-
-![Alt text](public/login.png?raw=true "Login page flow")
-
-- **Login Page**
-    - On the Login Page component is and input box that takes in your username, password that on submit calls the login function of the userService helper.
-- **Reducers**
-    - The User Reducer login function calls User Service login function and handles whether the call is a success or error:
-        - Upon successful authentification, the Browser history path is updated to "/" ("/dashboard"), which triggers the listener in the Appcomponent to switch the current page to the Dashboard page. 
-        - An unsuccessful authentification will send and alert to the Alert Reducer, which should trigger and alert message to show in the root <App> component
-    - The Alert Reducer updates an alert in the App component upon update with an error
-- **User Service**
-    - The User Service login function fetch POST call to the backend.
-        - POST call ("users/authenticate") to the backend verify if the username and password provided is correct
-            - If a the username does not exist in the database or if the password is incorrect a corresponding error will be returned which should trigger an update to the Alert reducer.
-            - Otherwise the fetch call is a success and the user data and jwt token is returned.
-
-
-### Register Process
-
-![Alt text](public/register.png?raw=true "Register page flow")
-
-- **Register Page**
-    - On the Register Page component is and form input that takes in your name, username and password. On supbmit it calls  that calls the register function of the userService helper.
-- **Reducers**
-    - The User Reducer register function calls User Service register function and handles whether the call is a success or error:
-        - Upon successful registration, the Browser history path is updated to "/login", which triggers the listener in the App component to switch the current page to the Login page so the user can login with their newly made account. 
-        - An unsuccessful registration will send an alert to the Alert Reducer, which should trigger an alert message shown the App component
-    - The Alert Reducer updates an alert in the App component upon update with an error.
-- **User Service**
-    - The User Service register function is a fetch POST call to the backend.
-        - POST call ("users/authenticate") to the backend to add the user to the stored users data
-            - If a user with the requested username already exists, then an error is returned which should updated the Alert reducer through the User reducer.
-            - Otherwise the user is added to the database and a success status is returned.
-
----
-
-
+* Application is now running on localhost:  `http://localhost/`
