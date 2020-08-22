@@ -108,7 +108,7 @@ export function Dashboard() {
 
     const styles = {
       container: { 
-        marginTop: '30px',
+        marginTop: '4vh',
         width: '100%',
         height: '100%',
         minHeight: '100vh',
@@ -186,7 +186,7 @@ export function Dashboard() {
       ( data.items.current_stocks && data.items.aggregated &&
   <Row className='mt-4'>
     <Col xs={7}>
-      <Card style={{height: '75.4vh'}} >
+      <Card style={{height: '76vh'}} >
         <Card.Header>
           <Nav variant="tabs" defaultActiveKey={dashboard_nav} onSelect={(selectedKey) => dispatch(switchDashboardNav(selectedKey))} >
             <Nav.Item>
@@ -220,15 +220,15 @@ export function Dashboard() {
     <Col>
         <Row>
           <Col>
-            <Card style={{height: '43vh'}}>
+            <Card style={{height: '45vh'}}>
             <Card.Body>
                 <BarChart data= {get_bar_chart_data(data.items.current_stocks, 'symbol', 'amount')}/>
               </Card.Body>
             </Card>
           </Col>
 
-          <Col className="mt-4">
-            <Card style={{height: '29.8vh'}}>
+          <Col className="mt-3">
+            <Card style={{height: '29.4vh'}}>
             <Card.Body>
               <Table vals={data.items.current_stocks} />
               </Card.Body>

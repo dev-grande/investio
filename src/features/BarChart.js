@@ -5,7 +5,7 @@ export function BarChart ( props ) {
     var vals = props;
     return (
         // <div style={{height: "68vh" , width: "55vw"}} className="m-auto row justify-content-center">
-        <div style={{height: "39vh" , width: "30vw"}} className="m-auto row justify-content-center">
+        <div style={{height: "42vh" , width: "30vw"}} className="m-auto row justify-content-center">
         <div className="row justify-content-center"><h3>Stocks</h3></div>
                 <ResponsiveBar
                 data={vals.data}
