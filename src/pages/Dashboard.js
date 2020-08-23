@@ -121,7 +121,11 @@ export function Dashboard() {
       monthly_div: { height: "66vh" , width: "50vw"},
 
       stock_margin: { top: 40, right: 40, bottom: 80, left: 70 },
-      stock_div: { height: "57vh" , width: "50vw"}
+      stock_div: { height: "57vh" , width: "50vw"},
+
+      topCards: {
+        height:'12vh'
+      }
 
     }
 
@@ -142,35 +146,35 @@ export function Dashboard() {
         <Row>
           <Col>
               <CardDeck>
-                <Card className="text-center" style={{height:'12vh'}}>
+                <Card className="text-center" style={styles.topCards}>
                 <Card.Header>Cash Value:</Card.Header>
                   <Card.Body>
                     <h1 style={{fontSize: '2.7vh'}}>${data.items.cash_value.toLocaleString('en')}</h1>
                   </Card.Body>
                 </Card>
 
-                <Card className="text-center" style={{height:'12vh'}}>
+                <Card className="text-center" style={styles.topCards}>
                 <Card.Header>Stock Value: </Card.Header>
                   <Card.Body>
                     <h1 style={{fontSize: '2.7vh'}}>${data.items.invested.toLocaleString('en')}</h1>
                   </Card.Body>
                 </Card>
 
-                <Card className="text-center" style={{height:'12vh'}}>
+                <Card className="text-center" style={styles.topCards}>
                 <Card.Header>Account Value: </Card.Header>
                   <Card.Body>
                     <h1 style={{fontSize: '2.7vh'}}>${data.items.account_value.toLocaleString('en')}</h1>
                   </Card.Body>
                 </Card>
 
-                <Card className="text-center" style={{height:'12vh'}}>
+                <Card className="text-center" style={styles.topCards}>
                 <Card.Header>Dividend Earnings: </Card.Header>
                   <Card.Body>
                     <h1 style={{fontSize: '2.7vh'}}>${data.items.div_total.toLocaleString('en')}</h1>
                   </Card.Body>
                 </Card>
 
-                <Card className="text-center" style={{height:'12vh'}}>
+                <Card className="text-center" style={styles.topCards}>
                 <Card.Header>Need to Find: </Card.Header>
                   <Card.Body>
                     <h1 style={{fontSize: '2.7vh'}}>$1,234.56</h1>
@@ -199,9 +203,10 @@ export function Dashboard() {
         </Card.Header>
         <Card.Body>
 
-          {dashboard_nav==='monthly' && 
+          {dashboard_nav==='monthly' && data.items && (
+            data.items.aggregated &&
             <LineChart data={get_line_chart_data(data.items.aggregated, 'date', 'amount', 'dividend earnings')}
-            title="Monthly Dividend Earnings" div={styles.monthly_div} margin={styles.monthly_margin} /> }
+            title="Monthly Dividend Earnings" div={styles.monthly_div} margin={styles.monthly_margin} /> ) }
 
           {dashboard_nav==='stock' && data.items && (
             data.items.selected_stock && data.items.individual_div &&
@@ -246,6 +251,8 @@ export function Dashboard() {
       <Image src={logo} style={{height: '18vh', border: '1px'}} className='p-2 m-3'/>
     </Col>
   </Row> }
+
+  
 
 </Container>
 
