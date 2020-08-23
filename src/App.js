@@ -12,7 +12,6 @@ import { Dashboard } from './pages/Dashboard';
 import { Settings } from './pages/Settings';
 import { Reports } from './pages/Reports';
 
-
 export function App() {
   const alert = useSelector(state => state.alert);
   const dispatch = useDispatch();
@@ -24,8 +23,16 @@ export function App() {
       });
   }, [dispatch]);
 
+  const styles = {
+    body: {
+      backgroundColor: '#F0F0F0', 
+      width: '100%', 
+      height: '100%'
+    }
+  }
+
   return (
-      <div >
+      <div style={styles.body} >
                   {alert.message &&
                       <div className={`alert ${alert.type}`} style={{marginBottom: "0"}}>{alert.message}
                       </div>

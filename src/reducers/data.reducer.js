@@ -1,30 +1,80 @@
 export function data(state = {}, action) {
   switch (action.type) {
-    case "GETALL_REQUEST":
-      return {
-        loading: true
-      };
-    case "GETALL_SUCCESS":
-      return {
-        items: action.data
-      };
-    case "UPLOAD_SUCCESS":
-        console.log(action.data);
-      return {
-          items: action.data
-      };
-    case "SELECT_YEAR":
+    case "GET_DASHBOARD_REQUEST":
       return {
       ...state,
       items: { ...state.items,
-          selected_year: action.selected_year
+        loading: true
       } 
       };
-    case "DELETION_SUCCESS":
-      console.log(action.data);
+      
+    case "GET_DASHBOARD_SUCCESS":
       return {
-        items: action.data
+      ...state,
+      items: { ...state.items,
+          div_total: action.data.div_total,
+          aggregated: action.data.aggregated,
+          cash_value: action.data.cash_value,
+          account_value: action.data.account_value,
+          invested: action.data.invested,
+          current_stocks: action.data.current_stocks,
+          div_stocks: action.data.div_stocks,
+          loading: false
+      } 
       };
+
+    case "GET_REPORTS_REQUEST":
+      return {
+      ...state,
+      items: { ...state.items,
+        loading: true
+      } 
+      };
+
+    case "GET_REPORTS_SUCCESS":
+      return {
+      ...state,
+        items: { ...state.items,
+        raw_div: action.data.raw_div,
+        aggregated_div: action.data.aggregated_div,
+        buy_sell: action.data.buy_sell,
+          loading: false
+      } 
+      };
+
+    case "GET_STOCK_DIV_REQUEST":
+      return {
+      ...state,
+      items: { ...state.items
+      } 
+      };
+
+    case "GET_STOCK_DIV_SUCCESS":
+      return {
+      ...state,
+      items: { ...state.items,
+          individual_div: action.data.individual_div,
+          selected_stock: action.data.selected_stock
+      } 
+      };
+
+    case "GET_YEARS_SUCCESS":
+      return {
+      ...state,
+      items: { ...state.items,
+          years: action.data
+      } 
+      };
+
+    case 'DELETE_YEAR_SUCCESS':
+      // remove deleted year from state
+      return {
+        ...state,
+        items: { ...state.items,
+            years: state.items.years.filter(year => year.year !== action.year)
+        } 
+      };
+
     default:
       return state
   }

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-
+import logo from '../images/logo_name.png';
+import { Image } from 'react-bootstrap';
 import { userActions } from '../reducers/actions';
 
 export function RegisterPage() {
@@ -42,6 +43,7 @@ export function RegisterPage() {
                 <div className="card">
                     <div className="card-body">
                         <h2>Register</h2>
+                        <div className="text-center"> <Image src={logo} style={{height: '20vh', border: '1px'}} className='p-2 m-3'/></div>
                         <form name="form" onSubmit={handleSubmit}>
                             <div className="form-group">
                                 <label>First Name</label>

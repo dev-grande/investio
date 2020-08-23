@@ -4,70 +4,47 @@ import { ResponsiveLine } from '@nivo/line'
 export function LineChart ( props ) {
     var vals = props;
         return (
-            <div style={{height: "50vh" , width: "100vh"}} className="m-auto row justify-content-center">
-            <div className="row justify-content-center"><h3>Dividends {vals.year}</h3></div>
+            <div style={vals.div} className="m-auto row justify-content-center">
+            <div style={{marginTop: '15px'}} className="row justify-content-center"><h3>{vals.title}</h3></div>
 
                 <ResponsiveLine
-                data={vals.data.chart_data}
-                margin={{ top: 35, right: 110, bottom: 110, left: 60 }}
-                xScale={{ type: 'point' }}
+                data={vals.data}
+                margin={vals.margin}
+                padding={0.3}
+                xScale={{
+                    type: "time",
+                    format: "%Y-%m-%d"
+                  }}
+                xFormat="time:%m / %Y"
                 yScale={{ type: 'linear', min: 'auto', max: 'auto', stacked: true, reverse: false }}
-                axisTop={null}
-                axisRight={null}
-                axisBottom={{
-                    orient: 'bottom',
+                  axisTop={null}
+                  axisRight={null}
+                  axisLeft={{
+                    orient: "left",
                     tickSize: 5,
                     tickPadding: 5,
                     tickRotation: 0,
-                    legend: 'Month',
-                    legendOffset: 36,
-                    legendPosition: 'middle'
-                }}
-                axisLeft={{
-                    orient: 'left',
-                    tickSize: 5,
-                    tickPadding: 5,
-                    tickRotation: 0,
-                    legend: 'Amount',
+                    legend: "AMOUNT",
                     legendOffset: -40,
-                    legendPosition: 'middle'
-                }}
-                colors={{ scheme: 'nivo' }}
-                pointSize={10}
+                    legendPosition: "middle"
+                  }}
+                  axisBottom={{
+                    format: "%Y",
+                    tickValues: "every year",
+                    tickSize: 5,
+                    tickPadding: 10,
+                  }}
+
+                colors={{ scheme: 'set2' }}
+                pointSize={4}
                 pointColor={{ theme: 'background' }}
-                pointBorderWidth={2}
+                pointBorderWidth={4}
                 pointBorderColor={{ from: 'serieColor' }}
                 pointLabel="y"
                 pointLabelYOffset={-12}
                 useMesh={true}
-                legends={[
-                    {
-                        anchor: 'bottom-right',
-                        direction: 'column',
-                        justify: false,
-                        translateX: 100,
-                        translateY: 0,
-                        itemsSpacing: 0,
-                        itemDirection: 'left-to-right',
-                        itemWidth: 80,
-                        itemHeight: 20,
-                        itemOpacity: 0.75,
-                        symbolSize: 12,
-                        symbolShape: 'circle',
-                        symbolBorderColor: 'rgba(0, 0, 0, .5)',
-                        effects: [
-                            {
-                                on: 'hover',
-                                style: {
-                                    itemBackground: 'rgba(0, 0, 0, .03)',
-                                    itemOpacity: 1
-                                }
-                            }
-                        ]
-                    }
-                ]}
+                legends={[]}
             />
-
         </div>
         )
 
