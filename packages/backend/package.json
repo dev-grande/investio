@@ -1,6 +1,7 @@
 {
-  "name": "backend",
+  "name": "@investio/backend",
   "version": "0.1.0",
+  "private": false,
   "description": "",
   "main": "index.js",
   "scripts": {

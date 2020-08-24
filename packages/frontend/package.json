@@ -1,7 +1,7 @@
 {
-  "name": "investment_web_app",
+  "name": "@investio/frontend",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "@nivo/bar": "^0.62.0",
     "@nivo/line": "^0.62.0",
