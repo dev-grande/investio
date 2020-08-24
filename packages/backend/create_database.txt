@@ -1,0 +1,60 @@
+CREATE DATABASE investio;
+
+CREATE ROLE test_user WITH LOGIN PASSWORD 'test_password';
+GRANT ALL PRIVILEGES ON DATABASE investio TO test_user;
+GRANT CONNECT ON DATABASE investio TO test_user;
+
+DROP TABLE users;
+DROP TABLE years;
+DROP TABLE Aggregated_Data;
+DROP TABLE Raw_Data;
+
+CREATE TABLE users (
+  ID SERIAL PRIMARY KEY,
+  firstname VARCHAR(30),
+  lastname VARCHAR(30),
+  username VARCHAR(30),
+  password VARCHAR(100)
+);
+
+INSERT INTO users (firstname, lastname, username, password)
+  VALUES ('Diana', 'Grande', 'granded', 'nessa'), 
+        ('Nessa', 'Grande', 'nessa', 'nessa'), 
+        ('Test', 'User', 'testuser', 'nessa');
+
+CREATE TABLE years (
+  user_id INT,
+  year INT,
+  PRIMARY KEY (user_id, year),
+  CONSTRAINT fk_user
+    FOREIGN KEY (user_id)
+      REFERENCES users(id)
+      ON DELETE CASCADE
+);
+
+CREATE TABLE Aggregated_Data (
+  user_id INT,
+  year INT,
+  amount NUMERIC,
+  month INT,
+  CONSTRAINT fk_year
+    FOREIGN KEY (user_id, year)
+      REFERENCES years(user_id, year)
+      ON DELETE CASCADE
+);
+
+# date format is 'YYYY-MM-DD'
+
+CREATE TABLE Raw_Data (
+  user_id INT,
+  year INT,
+  amount NUMERIC,
+  date DATE, 
+  description VARCHAR(30),
+  symbol VARCHAR(10),
+  CONSTRAINT fk_year
+    FOREIGN KEY(user_id, year)
+      REFERENCES years(user_id, year)
+      ON DELETE CASCADE
+);
+
