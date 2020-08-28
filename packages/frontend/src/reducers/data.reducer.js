@@ -9,18 +9,10 @@ export function data(state = {}, action) {
       };
       
     case "GET_DASHBOARD_SUCCESS":
+      var items = action.data;
+      items.loading = false;
       return {
-      ...state,
-      items: { ...state.items,
-          div_total: action.data.div_total,
-          aggregated: action.data.aggregated,
-          cash_value: action.data.cash_value,
-          account_value: action.data.account_value,
-          invested: action.data.invested,
-          current_stocks: action.data.current_stocks,
-          div_stocks: action.data.div_stocks,
-          loading: false
-      } 
+        items
       };
 
     case "GET_REPORTS_REQUEST":

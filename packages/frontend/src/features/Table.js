@@ -1,101 +1,120 @@
 import React from 'react';
 
-function generate_table( keys, data ){
-    var child_div =  {
-      height: '100%',
-      marginRight: '-50px', /* Maximum width of scrollbar */
-      paddingRight: '50px', /* Maximum width of scrollbar */
-      overflowY: 'scroll'
+export class Table extends React.Component {
+    constructor(props) {
+        super(props);
+        var full_data = props.vals;
+    
+        const parent_div ={
+            height: '40vh',
+            overflow: 'hidden'
+          };
+    
+        var full_data_keys = Object.keys(full_data[0]);
+
+        var sort_asc_desc = {};
+        full_data_keys.map((key) => {
+            sort_asc_desc[key] = 'desc';
+            }
+        );
+
+        this.state = {
+          full_data,
+          parent_div,
+          full_data_keys,
+          sort_asc_desc
+        };
+
+        // this.sort_column = this.sort_column.bind(this);
+        // this.generate_table = this.generate_table.bind(this);
+      }
+
+       sort_column (key) {
+        console.log("in sort column");
+        var data = this.state.full_data;
+        var new_sort = this.state.sort_asc_desc;
+        if (this.state.sort_asc_desc[key] == 'desc') {
+            data.sort((a, b) => (a[key] < b[key]) ? 1 : -1);
+            new_sort[key] = 'asc'
+        }
+        else {
+            data.sort((a, b) => (a[key] > b[key]) ? 1 : -1);
+            new_sort[key] = 'desc'
+        }
+        
+        this.setState( {
+            full_data: data,
+            sort_asc_desc: new_sort
+        })
     }
 
-    return (
-        <div style={child_div}>
-        <table className="ui celled table">
-        <thead >
-            <tr>{keys.map((key, index) =>
-                    <th key={index} style={{position: 'sticky', top: '0'}}>{key.toUpperCase()}</th>
-            )}</tr>
-        </thead>
-        <tbody>
-            {data.map((row, index) =>
-                <tr key={index}>{keys.map((key, index) =>
-                    <td data-label={key} key={index}>{row[key]}</td>
+    generate_table = ( keys, data ) => {
+        var child_div =  {
+          height: '100%',
+          marginRight: '-50px', /* Maximum width of scrollbar */
+          paddingRight: '50px', /* Maximum width of scrollbar */
+          overflowY: 'scroll'
+        }
+    
+        return (
+            <div style={child_div}>
+            <table className="ui celled table">
+            <thead >
+                <tr>{keys.map( (key, index) => {
+                        if (key === "quantity") 
+                            return (<th key={index} style={{position: 'sticky', top: '0'}}>
+                                <button onClick={() => this.sort_column(key)} style={{border: "0", height: '3vh'}}>#</button>
+                            </th>);
+                        else if (key === "symbol")
+                            return (<th key={index} style={{position: 'sticky', top: '0'}}>
+                                <button onClick={() => this.sort_column(key)} style={{border: "0", height: '3vh'}}>STOCK</button>
+                            </th>);
+                       if (key !== "percent") 
+                        return <th key={index} style={{position: 'sticky', top: '0'}}>
+                            <button onClick={() => this.sort_column(key)} style={{border: "0", height: '3vh'}}>{key.toUpperCase()}</button>
+                        </th>;
+                    }
                 )}</tr>
-            )}
-        </tbody>
-        </table>
-        </div>
-    )
+            </thead>
+            <tbody>
+                {data.map((row, index) =>
+                    <tr key={index}>{keys.map(function (key, index) {
 
-}
+                        if (key === "close"  || key === "amount" ) {
+                            return <td data-label={key} key={index} >${row[key].toLocaleString('en')}</td>
+                        }
 
-export function Table ( vals ) {
-    var full_data = vals.vals;
+                        else if ( key === "price") {
+                            if (row["change"] > 0) return <td data-label={key} key={index} style={{color: "#34B244"}}>${row[key].toLocaleString('en')}</td>
+                            return <td data-label={key} key={index} style={{color: "#E30000"}}>${row[key].toLocaleString('en')}</td>
+                        }
 
-    const parent_div ={
-        height: '25vh',
-        overflow: 'hidden'
-      };
+                        else if ( key === "change"|| key === "price") {
+                            if (row["change"] > 0) return <td data-label={key} key={index} style={{color: "#34B244"}}>+{row[key].toLocaleString('en')}    ({row.percent}%) </td>
+                            return <td data-label={key} key={index} style={{color: "#E30000"}}>{row[key].toLocaleString('en')}   ({row.percent}%) </td>
+                        }
+                        
+                        else if (key === "percent"){
+                            return;
+                        }
 
-    var full_data_keys = Object.keys(full_data[0]);
-    return (
-        <div style={parent_div} >
-            {generate_table( full_data_keys, full_data )}
-        </div>
-    )
-}
+                        return <td data-label={key} key={index}>{row[key].toLocaleString('en')}</td> 
+                    
+                    }
+                    )}</tr>
+                )}
+            </tbody>
+            </table>
+            </div>
+        )
+    
+    }
 
-
-// import React from 'react';
-// import { MDBDataTableV5 } from 'mdbreact';
-
-// const Table = (vals) => {
-//     if (vals.vals.length === 0) return (<div></div>);
-//     var data = {
-//         columns : [],
-//         rows : []
-//     }
-
-//     var header_vals = Object.keys(vals.vals[0]);
-//     data.columns = header_vals.map( (header) => 
-//         ({  label: header.toUpperCase(),
-//             field: header })
-//     )
-
-//     data.rows = vals.vals;
-
-//   return (
-// <div>
-//     <div className="row justify-content-center">
-//         <h3>{vals.title}</h3> 
-//     </div> 
-//     <MDBDataTableV5
-//       scrollY
-//       maxHeight="20vh"
-//       // striped
-//       // bordered
-//       small
-//       data={data}
-//       info={false}
-//       paging={false}
-//       searching={false}
-//       sortable={false}
-//     />
-
-//     {/* <MDBDataTableV5 
-//     hover 
-//     // scrollY 
-//     // maxHeight='25vh' 
-//     entries={4} 
-//     data={data} 
-//     info={false}
-//     entriesOptions={[2, 4]} 
-//     small
-//     // paging={false}
-//     searching={false}
-//     sortable={false} 
-//     /> */}
-// </div>
-//   );
-// }
-
+    render() {
+        return (
+            <div style={this.state.parent_div} >
+                {this.generate_table( this.state.full_data_keys, this.state.full_data )}
+            </div>
+        )
+    }
+  }
