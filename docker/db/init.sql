@@ -10,8 +10,19 @@ CREATE TABLE users (
   password VARCHAR(100)
 );
 
+CREATE TABLE portfolios (
+  user_id INT,
+  portfolio VARCHAR(30),
+  PRIMARY KEY (user_id, portfolio),
+  CONSTRAINT fk_user
+    FOREIGN KEY (user_id)
+      REFERENCES users(id)
+      ON DELETE CASCADE
+);
+
 CREATE TABLE raw_data (
   user_id INT,
+  portfolio VARCHAR(30),
   date DATE, 
   transaction_id NUMERIC,
   type VARCHAR(30),
@@ -21,10 +32,10 @@ CREATE TABLE raw_data (
   price NUMERIC,
   commission NUMERIC,
   reg_fee NUMERIC,
-  PRIMARY KEY (user_id, transaction_id),
-  CONSTRAINT fk_user
-    FOREIGN KEY (user_id)
-      REFERENCES users(id)
+  PRIMARY KEY (user_id, portfolio, transaction_id),
+  CONSTRAINT fk_portfolio
+    FOREIGN KEY (user_id, portfolio)
+      REFERENCES portfolios(user_id, portfolio)
       ON DELETE CASCADE
 );
 

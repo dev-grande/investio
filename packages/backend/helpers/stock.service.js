@@ -43,7 +43,7 @@ const getStockPrice = (stock) => {
             return new_stock;
         })
         .catch((error)=>{
-          console.log(error)
+          console.log("Stock api error with STOCK:  " + symbol)
         })
 }
 
