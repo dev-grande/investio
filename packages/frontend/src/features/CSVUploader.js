@@ -17,20 +17,21 @@ function handleOpenDialog(e){
   }
 }
 
-function handleUpload(user_id, data, dispatch)
+function handleUpload(user_id, data, portfolio, dispatch)
 {
-  dispatch( dataActions.uploadData(user_id, data) );
-  dispatch(dataActions.getYears(user_id));
+  dispatch( dataActions.uploadData(user_id, data, portfolio) );
+  dispatch(dataActions.getYears(user_id, portfolio));
 }
 
 
 export function CSVUploader() {
     const dispatch = useDispatch();
     const user = useSelector(state => state.authentication.user.id);
+    const portfolio = useSelector(state => state.navigation.portfolio_nav);
     return (
       <CSVReader
       ref={buttonRef}
-      onFileLoad={(data) => handleUpload(user, data, dispatch)}
+      onFileLoad={(data) => handleUpload(user, data, portfolio, dispatch)}
       onError={e => handleOnError(e.err, e.file, e.inputElem, e.reason)}
       noClick
       noDrag

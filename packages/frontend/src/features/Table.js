@@ -1,39 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-export class Table extends React.Component {
-    constructor(props) {
-        super(props);
-        var full_data = props.vals;
-    
-        const parent_div ={
-            height: '40vh',
-            overflow: 'hidden'
-          };
-    
-        var full_data_keys = Object.keys(full_data[0]);
+export function Table (p)  {
 
-        var sort_asc_desc = {};
-        full_data_keys.map((key) => {
-            sort_asc_desc[key] = 'desc';
-            }
-        );
+    var sort_vals = {};
+    Object.keys(p.vals[0]).map((key) => {
+        sort_vals[key] = 'desc';
+    });
 
-        this.state = {
-          full_data,
-          parent_div,
-          full_data_keys,
-          sort_asc_desc
-        };
+    const [vals, setVals] = useState({
+        sort_asc_desc: sort_vals,
+        full_data: p.vals
+    })
 
-        // this.sort_column = this.sort_column.bind(this);
-        // this.generate_table = this.generate_table.bind(this);
-      }
+    const {sort_asc_desc, full_data} = vals;
 
-       sort_column (key) {
+    if (p.vals !== full_data) {
+        setVals(vals => ({ ...vals, full_data: p.vals }));
+    }
+
+      
+    function sort_column (key) {
         console.log("in sort column");
-        var data = this.state.full_data;
-        var new_sort = this.state.sort_asc_desc;
-        if (this.state.sort_asc_desc[key] == 'desc') {
+        var data = p.vals;
+        var new_sort = sort_asc_desc;
+        if (sort_asc_desc[key] == 'desc') {
             data.sort((a, b) => (a[key] < b[key]) ? 1 : -1);
             new_sort[key] = 'asc'
         }
@@ -41,14 +31,15 @@ export class Table extends React.Component {
             data.sort((a, b) => (a[key] > b[key]) ? 1 : -1);
             new_sort[key] = 'desc'
         }
+
+        setVals(vals => ({ ...vals, full_data: data, sort_asc_desc: new_sort }));
         
-        this.setState( {
-            full_data: data,
-            sort_asc_desc: new_sort
-        })
     }
 
-    generate_table = ( keys, data ) => {
+    function generate_table( ) {
+        var data = full_data;
+        var keys = Object.keys(data[0]);
+
         var child_div =  {
           height: '100%',
           marginRight: '-50px', /* Maximum width of scrollbar */
@@ -63,15 +54,15 @@ export class Table extends React.Component {
                 <tr>{keys.map( (key, index) => {
                         if (key === "quantity") 
                             return (<th key={index} style={{position: 'sticky', top: '0'}}>
-                                <button onClick={() => this.sort_column(key)} style={{border: "0", height: '3vh'}}>#</button>
+                                <button onClick={() => sort_column(key)} style={{border: "0", height: '3vh'}}>#</button>
                             </th>);
                         else if (key === "symbol")
                             return (<th key={index} style={{position: 'sticky', top: '0'}}>
-                                <button onClick={() => this.sort_column(key)} style={{border: "0", height: '3vh'}}>STOCK</button>
+                                <button onClick={() => sort_column(key)} style={{border: "0", height: '3vh'}}>STOCK</button>
                             </th>);
                        if (key !== "percent") 
                         return <th key={index} style={{position: 'sticky', top: '0'}}>
-                            <button onClick={() => this.sort_column(key)} style={{border: "0", height: '3vh'}}>{key.toUpperCase()}</button>
+                            <button onClick={() => sort_column(key)} style={{border: "0", height: '3vh'}}>{key.toUpperCase()}</button>
                         </th>;
                     }
                 )}</tr>
@@ -110,11 +101,12 @@ export class Table extends React.Component {
     
     }
 
-    render() {
-        return (
-            <div style={this.state.parent_div} >
-                {this.generate_table( this.state.full_data_keys, this.state.full_data )}
-            </div>
-        )
-    }
+
+    return (
+        <div style={{height: '40vh',overflow: 'hidden' }} >
+            {generate_table()}
+        </div>
+    )
+    
   }
+

@@ -9,11 +9,10 @@ export function data(state = {}, action) {
       };
       
     case "GET_DASHBOARD_SUCCESS":
-      var items = action.data;
+      var items = { ...state.items};
+      Object.keys(action.data).map((key) => { items[key] = action.data[key]})
       items.loading = false;
-      return {
-        items
-      };
+      return { items };
 
     case "GET_REPORTS_REQUEST":
       return {
@@ -58,12 +57,39 @@ export function data(state = {}, action) {
       } 
       };
 
+    case "GET_PORTFOLIOS_SUCCESS":
+      return {
+      ...state,
+      items: { ...state.items,
+          portfolios: action.data
+      } 
+      };
+
+    case "ADD_PORTFOLIO_SUCCESS":
+      console.log(state.items.portfolios)
+      console.log({portfolio: action.portfolio});
+      return {
+      ...state,
+      items: { ...state.items,
+          portfolios: [...state.items.portfolios, {portfolio: action.portfolio}]
+      } 
+      };
+
     case 'DELETE_YEAR_SUCCESS':
       // remove deleted year from state
       return {
         ...state,
         items: { ...state.items,
             years: state.items.years.filter(year => year.year !== action.year)
+        } 
+      };
+
+    case 'DELETE_PORTFOLIO_SUCCESS':
+      // remove deleted year from state
+      return {
+        ...state,
+        items: { ...state.items,
+          portfolios: state.items.portfolios.filter(p => p.portfolio !== action.portfolio)
         } 
       };
 
