@@ -1,6 +1,8 @@
 import { authHeader } from '../helpers';
+
+const host = process.env['INVESTIO_BACKEND_HOST'] || '0.0.0.0';
 const config =  {
-    apiUrl: 'http://localhost:4000'
+    apiUrl: `http://${host}:4000`
 }
 
 export const dataService = {
