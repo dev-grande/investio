@@ -37,7 +37,7 @@ export function Settings() {
         dispatch(dataActions.getYears(user.id, portfolio));
         dispatch(dataActions.getPortfolios(user.id));
       }
-    }, [dispatch, user]);
+    }, [dispatch, user, portfolio]);
 
     function handleDeleteUser(id) {
       dispatch(userActions.delete(id, portfolio));

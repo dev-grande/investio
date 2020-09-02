@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { dataActions } from '../reducers/actions';
 import {  Container, Row, Col, DropdownButton, Dropdown, ButtonGroup } from 'react-bootstrap';
@@ -6,9 +6,6 @@ import {  Container, Row, Col, DropdownButton, Dropdown, ButtonGroup } from 'rea
 import { getPortfolio, switchPortfolio } from "../reducers/navigationSlice"
 
 export function PortfolioDropdown(vals) {
-        // var stocks = vals.stocks;
-        // var selected_stock = vals.selected_stock;
-        // var user_id = vals.user_id
 
         const user_id = useSelector(state => state.authentication.user.id);
         const dispatch = useDispatch();

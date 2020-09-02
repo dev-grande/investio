@@ -10,7 +10,7 @@ export function data(state = {}, action) {
       
     case "GET_DASHBOARD_SUCCESS":
       var items = { ...state.items};
-      Object.keys(action.data).map((key) => { items[key] = action.data[key]})
+      Object.keys(action.data).map(function(key) { items[key] = action.data[key]; return key;})
       items.loading = false;
       return { items };
 

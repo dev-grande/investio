@@ -5,6 +5,7 @@ export function Table (p)  {
     var sort_vals = {};
     Object.keys(p.vals[0]).map((key) => {
         sort_vals[key] = 'desc';
+        return key;
     });
 
     const [vals, setVals] = useState({
@@ -23,7 +24,7 @@ export function Table (p)  {
         console.log("in sort column");
         var data = p.vals;
         var new_sort = sort_asc_desc;
-        if (sort_asc_desc[key] == 'desc') {
+        if (sort_asc_desc[key] === 'desc') {
             data.sort((a, b) => (a[key] < b[key]) ? 1 : -1);
             new_sort[key] = 'asc'
         }
@@ -51,7 +52,7 @@ export function Table (p)  {
             <div style={child_div}>
             <table className="ui celled table">
             <thead >
-                <tr>{keys.map( (key, index) => {
+                <tr>{keys.map( function(key, index) {
                         if (key === "quantity") 
                             return (<th key={index} style={{position: 'sticky', top: '0'}}>
                                 <button onClick={() => sort_column(key)} style={{border: "0", height: '3vh'}}>#</button>
@@ -60,7 +61,7 @@ export function Table (p)  {
                             return (<th key={index} style={{position: 'sticky', top: '0'}}>
                                 <button onClick={() => sort_column(key)} style={{border: "0", height: '3vh'}}>STOCK</button>
                             </th>);
-                       if (key !== "percent") 
+                       else if (key !== "percent") 
                         return <th key={index} style={{position: 'sticky', top: '0'}}>
                             <button onClick={() => sort_column(key)} style={{border: "0", height: '3vh'}}>{key.toUpperCase()}</button>
                         </th>;
@@ -85,11 +86,8 @@ export function Table (p)  {
                             return <td data-label={key} key={index} style={{color: "#E30000"}}>{row[key].toLocaleString('en')}   ({row.percent}%) </td>
                         }
                         
-                        else if (key === "percent"){
-                            return;
-                        }
-
-                        return <td data-label={key} key={index}>{row[key].toLocaleString('en')}</td> 
+                        else if (key !== "percent")
+                            return <td data-label={key} key={index}>{row[key].toLocaleString('en')}</td> 
                     
                     }
                     )}</tr>

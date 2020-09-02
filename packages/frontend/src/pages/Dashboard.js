@@ -11,8 +11,7 @@ import logo from '../images/logo_name.png';
 import { getDashboardNav, switchDashboardNav } from "../reducers/navigationSlice"
 import {  CardDeck, Card, 
           Container, Row, Col, 
-          Nav, Image, Collapse,
-        } from 'react-bootstrap';
+          Nav, Image } from 'react-bootstrap';
 
 function get_line_chart_data(data, keyx, keyy, title) {
   var result = []
