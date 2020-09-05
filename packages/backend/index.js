@@ -6,10 +6,6 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const app = express()
 
-const seed = require('./data/seed');
-
-const stock_service = require("./helpers/stock.service");
-
 var PORT = 4000
 var HOST = '0.0.0.0';
 
