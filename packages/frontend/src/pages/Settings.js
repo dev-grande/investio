@@ -67,7 +67,7 @@ export function Settings() {
         <Container fluid style={styles.container}>
           <Row>
             <Col>
-                <Card style={{height:'50vh'}}>
+                <Card style={{height:'45vh'}}>
                   <Card.Header><h4>USER DATA</h4></Card.Header>
                   <Card.Body className='text-center' >
                     <Image src={user_image} roundedCircle style={{height: '13vh', border: '1px'}} className='p-2 m-3'/>
@@ -82,7 +82,7 @@ export function Settings() {
             </Col>
 
             <Col xs={9}>
-              <Card style={{height:'50vh'}}>
+              <Card style={{height:'45vh'}}>
                 <Card.Header><h4>DATA IMPORT</h4>
                 <Nav variant="tabs" defaultActiveKey={portfolio} onSelect={(selectedKey) => handlePortfolio(dispatch, selectedKey)}  >
                  
@@ -110,7 +110,7 @@ export function Settings() {
                 { portfolio === "" &&  
                   <Card.Body>
                   <div className="ui segment">
-                  <div className="ui one column very relaxed stackable grid" style={{height: '35vh'}}>
+                  <div className="ui one column very relaxed stackable grid" style={{height: '30vh'}}>
                       <div className="middle aligned column text-center">
                       <h3>Select or add a portfolio name above to upload transaction data to.</h3>
                       </div>
@@ -123,7 +123,7 @@ export function Settings() {
                 <Card.Body>
                   <p>Import yearly dividends data from CSV file.</p>
                   <div className="ui segment">
-                  <div className="ui two column very relaxed stackable grid" style={{height: '35vh'}}>
+                  <div className="ui two column very relaxed stackable grid" style={{height: '25vh'}}>
                       <div className="middle aligned column text-center">
                         <p>Click to upload.</p>
                         <CSVUploader />
@@ -145,7 +145,7 @@ export function Settings() {
 
           <Row className="mt-4">
             <Col>
-              <Card style={{height:'35vh'}}>
+              <Card style={{height:'40vh'}}>
                   <Card.Header><h4>USERS</h4></Card.Header>
                   <Card.Body>
                     <p>All registered users: </p>
@@ -171,7 +171,7 @@ export function Settings() {
             </Col>
 
             <Col xs={9}>
-            <Card style={{height:'35vh'}}>
+            <Card style={{height:'40vh'}}>
                 <Card.Header><h4>EDIT DATA</h4></Card.Header>
                 {portfolio !== "" &&
                 <Card.Body>
@@ -179,7 +179,6 @@ export function Settings() {
                 
 
                 <p>Listed below are the year(s) of your transaction data for the selected portfolio.
-                  Click delete for the corresponding year to delete that year's transactions.
                 </p>
  
                     <CardDeck>
