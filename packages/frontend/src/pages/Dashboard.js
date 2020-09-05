@@ -5,13 +5,13 @@ import { LineChart } from '../features/LineChart';
 import { BarChart } from '../features/BarChart';
 import { Table }  from "../features/Table";
 import { StockDropdown } from '../features/StockDropdown';
+import { PortfolioDropdown } from '../features/PortfolioDropdown';
 import NavBar from '../features/NavBar';
 import logo from '../images/logo_name.png';
 import { getDashboardNav, switchDashboardNav } from "../reducers/navigationSlice"
 import {  CardDeck, Card, 
           Container, Row, Col, 
-          Nav, Image, Collapse,
-        } from 'react-bootstrap';
+          Nav, Image } from 'react-bootstrap';
 
 function get_line_chart_data(data, keyx, keyy, title) {
   var result = []
@@ -42,7 +42,9 @@ export function Dashboard() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if ( "id" in user ) {dispatch(dataActions.getDashboardData(user.id));}
+    if ( "id" in user ) {dispatch(dataActions.getDashboardData(user.id, "ALL"));
+    dispatch(dataActions.getPortfolios(user.id));
+  }
   }, [dispatch, user]);
 
   const data = useSelector(state => state.data);
@@ -80,12 +82,25 @@ export function Dashboard() {
       <div className="ui active inverted dimmer">
                 <div className="ui text loader">Loading</div>
             </div> }
-
       { data.items && 
       ( data.items.div_total &&
         <Row>
+          <Col xs={1}>
+          <div  style={{height:'12vh', width: "10wh"}}>
+          <PortfolioDropdown  stocks = {data.items.div_stocks}  user_id = {user.id}
+                              selected_stock = {data.items.selected_stock} />
+          </div>
+
+          </Col>
           <Col>
               <CardDeck>
+              {/* <Card className="text-center" style={{height:'12vh', width: "10wh"}}>
+                // <Card.Header>Cash Value:</Card.Header>
+                  <Card.Body>
+                    <h1 style={{fontSize: '2.7vh'}}>${data.items.cash_value.toLocaleString('en')}</h1>
+                  </Card.Body>
+                </Card> */}
+                
                 <Card className="text-center" style={styles.topCards}>
                 <Card.Header>Cash Value:</Card.Header>
                   <Card.Body>
@@ -170,11 +185,11 @@ export function Dashboard() {
           {dashboard_nav==='monthly' && data.items && (
             data.items.aggregated &&
             <Row className="text-center">
-            <LineChart data={get_line_chart_data(data.items.aggregated, 'date', 'amount', 'dividend earnings')}
-            title="Monthly Dividend Earnings" div={styles.monthly_div} margin={styles.monthly_margin} /> 
-            <Col>
-            <h4>Total Dividend Earnings: <h3> ${data.items.div_total.toLocaleString('en')}</h3> </h4>
-            </Col>
+              <Col> <LineChart data={get_line_chart_data(data.items.aggregated, 'date', 'amount', 'dividend earnings')}
+              title="Monthly Dividend Earnings" div={styles.monthly_div} margin={styles.monthly_margin} /> </Col>
+              <Col>
+                <h4>Total Dividend Earnings: <h3> ${data.items.div_total.toLocaleString('en')}</h3> </h4>
+              </Col>
             </Row>
             ) }
 
@@ -190,7 +205,7 @@ export function Dashboard() {
 
           {dashboard_nav==='stock' && data.items && (
           !data.items.selected_stock && !data.items.individual_div &&
-          <h2>There are not stocks with dividends to display</h2> )}
+          <h2>There are no stocks with dividends to display</h2> )}
 
           {dashboard_nav==='stocks'  && data.items && ( data.items.current_stocks &&
             <div style={{marginTop:'1vh'}}>

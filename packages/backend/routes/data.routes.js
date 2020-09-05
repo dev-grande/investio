@@ -5,9 +5,22 @@ module.exports = app => {
     
         router.post('/upload', db.uploadData);
         router.delete('/delete', db.deleteYear);
-        router.get('/years/:id', db.getYears);
+        router.post('/years', db.getYears);
+        router.get('/portfolios/:id', db.getPortfolios);
+        router.post('/portfolio', db.addPortfolio);
+        router.delete('/deleteP', db.deletePortfolio);
 
         router.get('/dashboard/:id', (request, response) => {
+          db.getAllDashboardData(request)
+            .then((data) => {
+              response.status(200).json(data);
+            })
+            .catch((err) => {
+              response.status(400).json({ status: 400, message: "error with retrieving data" });
+            }); 
+        });
+
+        router.post('/dashboard', (request, response) => {
           db.getDashboardData(request)
             .then((data) => {
               response.status(200).json(data);
@@ -16,6 +29,7 @@ module.exports = app => {
               response.status(400).json({ status: 400, message: "error with retrieving data" });
             }); 
         });
+
 
         router.get('/reports/:id', (request, response) => {
           db.getReportsData(request)

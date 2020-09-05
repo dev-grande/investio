@@ -6,12 +6,15 @@ export const dataActions = {
     uploadData,
     getYears,
     deleteYear,
-    getStockDiv
+    getStockDiv,
+    getPortfolios,
+    addPortfolio,
+    deletePortfolio
 };
 
-function uploadData(user_id, raw_data) {
+function uploadData(user_id, raw_data, portfolio) {
     return dispatch => {
-        dataService.upload(user_id, raw_data)
+        dataService.upload(user_id, raw_data, portfolio)
             .then(
                 updatedData => {
                     console.log(updatedData);
@@ -25,6 +28,22 @@ function uploadData(user_id, raw_data) {
     // function update(data) { return { type: "UPLOAD_SUCCESS", data } }
 }
 
+function addPortfolio(user_id, portfolio) {
+    return dispatch => {
+        dataService.addPortfolio(user_id, portfolio)
+            .then(
+                updatedData => {
+                    console.log(portfolio)
+                    dispatch(update(portfolio));
+                },
+                error => {
+                    console.log(error + "error:  getAllData failed")
+                }
+            );
+    };
+    function update(data) { return { type: "ADD_PORTFOLIO_SUCCESS", portfolio } 
+}
+}
 function getStockDiv(user_id, symbol) {
     return dispatch => {
         dispatch(request());
@@ -45,14 +64,14 @@ function getStockDiv(user_id, symbol) {
 }
 
 
-function getDashboardData(user_id) {
+function getDashboardData(user_id, portfolio) {
     return dispatch => {
         dispatch(request());
 
-        dataService.getDashboardData(user_id)            
+        dataService.getDashboardData(user_id, portfolio)            
         .then(data => {
                 dispatch(update(data))
-            }
+        }
             // error => console.log("error:  delete data failed")
         );
     };
@@ -80,10 +99,21 @@ function getReportsData(user_id) {
     // function failure(error) { return { type: userConstants.GETALL_FAILURE, error } }
 }
 
-
-function getYears(user_id) {
+function getPortfolios(user_id) {
     return dispatch => {
-        dataService.getYears(user_id)            
+        dataService.getPortfolios(user_id)            
+        .then(data => {
+                dispatch(update(data))
+            }
+        );
+    };
+    function update(data) { 
+        return { type: "GET_PORTFOLIOS_SUCCESS", data }; }
+}
+
+function getYears(user_id, portfolio) {
+    return dispatch => {
+        dataService.getYears(user_id, portfolio)            
         .then(data => {
                 dispatch(update(data))
             }
@@ -93,14 +123,24 @@ function getYears(user_id) {
         return { type: "GET_YEARS_SUCCESS", data }; }}
 
 
-function deleteYear(id, year) {
+function deleteYear(id, year, portfolio) {
     return dispatch => {
-        dataService.deleteYear(id, year)
+        dataService.deleteYear(id, year, portfolio)
             .then(
                 resp => {
-                    console.log(year)
                     dispatch(success(year)) },
             );
     };
     function success(year) { return { type: "DELETE_YEAR_SUCCESS", year } }
+}
+
+function deletePortfolio(id, portfolio) {
+    return dispatch => {
+        dataService.deletePortfolio(id, portfolio)
+            .then(
+                resp => {
+                    dispatch(success(portfolio)) },
+            );
+    };
+    function success(year) { return { type: "DELETE_PORTFOLIO_SUCCESS", portfolio } }
 }

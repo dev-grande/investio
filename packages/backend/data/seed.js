@@ -11,6 +11,15 @@ const db = pgp({
     port: 5432
 });
 
+var user_id = 1;
+var portfolio = "After Tax";
+try{
+  pool.query("insert into portfolios (user_id, portfolio) values ($1, $2) ", [user_id, portfolio]);
+  pool.query("insert into portfolios (user_id, portfolio) values ($1, $2) ", [user_id, "Test 1"]);
+  pool.query("insert into portfolios (user_id, portfolio) values ($1, $2) ", [user_id, "Test 2"]);
+} catch (error) {}
+
+
 async function seed_data(data) {
 
   var user_id = 1;
@@ -53,7 +62,7 @@ var seed_file = seed_files[index];
       .on('data', (row) => {
         if (row["DATE"] !== '***END OF FILE***')
         {
-          var data = {user_id: 1}
+          var data = {user_id: 1, portfolio: "After Tax"}
           if (row["DESCRIPTION"].includes("DIVIDEND") || row["DESCRIPTION"].includes("Dividend")) {
               data['type'] = "dividend";
           }

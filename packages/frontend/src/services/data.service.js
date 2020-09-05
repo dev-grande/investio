@@ -10,36 +10,84 @@ export const dataService = {
     upload,
     deleteYear,
     getStockDiv,
-    getYears
+    getYears,
+    getPortfolios,
+    addPortfolio,
+    deletePortfolio
 };
 
-function deleteYear(user_id, year) {
+function deleteYear(user_id, year, portfolio) {
     const requestOptions = {
         method: 'DELETE',
         headers: authHeader(),
-        body: JSON.stringify({ user_id, year })
+        body: JSON.stringify({ user_id, year, portfolio })
     };
 
     return fetch(`${config.apiUrl}/data/delete`, requestOptions).then(handleResponse);
 }
 
-function getYears(user_id) {
+function deletePortfolio(user_id, portfolio) {
+    const requestOptions = {
+        method: 'DELETE',
+        headers: authHeader(),
+        body: JSON.stringify({ user_id, portfolio })
+    };
+
+    return fetch(`${config.apiUrl}/data/deleteP`, requestOptions).then(handleResponse);
+}
+
+function getYears(user_id, portfolio) {
+    const requestOptions = {
+        method: 'POST',
+        headers: authHeader(),
+        body: JSON.stringify({ user_id, portfolio })
+    };
+
+    return fetch(`${config.apiUrl}/data/years`, requestOptions).then(handleResponse);
+}
+
+function getPortfolios(user_id) {
     const requestOptions = {
         method: 'GET',
         headers: authHeader(),
     };
 
-    return fetch(`${config.apiUrl}/data/years/${user_id}`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/data/portfolios/${user_id}`, requestOptions).then(handleResponse);
+}
+
+function addPortfolio(user_id, portfolio) {    
+    const requestOptions = {
+        method: 'POST',
+        headers: authHeader(),
+        body: JSON.stringify({ user_id, portfolio })
+    };
+
+    return fetch(`${config.apiUrl}/data/portfolio`, requestOptions)
+        .then(handleResponse)
+        .then(updatedData => {
+            return updatedData;
+        });
 }
 
 
-function getDashboardData(user_id) {
+function getDashboardData(user_id, portfolio) {
+
+    if (portfolio === "ALL") {
+        const requestOptions = {
+            method: 'GET',
+            headers: authHeader(),
+        };
+    
+        return fetch(`${config.apiUrl}/data/dashboard/${user_id}`, requestOptions).then(handleResponse);
+
+    }
     const requestOptions = {
-        method: 'GET',
+        method: 'POST',
         headers: authHeader(),
+        body: JSON.stringify({ user_id, portfolio })
     };
 
-    return fetch(`${config.apiUrl}/data/dashboard/${user_id}`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/data/dashboard`, requestOptions).then(handleResponse);
 }
 
 
@@ -52,8 +100,8 @@ function getReportsData(user_id) {
     return fetch(`${config.apiUrl}/data/reports/${user_id}`, requestOptions).then(handleResponse);
 }
 
-function upload(user_id, raw_data) {
-    var upload_data = parse(raw_data, user_id);
+function upload(user_id, raw_data, portfolio) {
+    var upload_data = parse(raw_data, user_id, portfolio);
     
     const requestOptions = {
         method: 'POST',
@@ -108,7 +156,7 @@ function handleResponse(response) {
 
 }
 
-function parse(raw_data, user_id) {
+function parse(raw_data, user_id, portfolio) {
 
     var columns = raw_data[0].data;
     var full_data = [];
@@ -119,6 +167,7 @@ function parse(raw_data, user_id) {
         if (rows && rows.length > 1 ) {
             var data =  rows.reduce(function(data, field, index) {
                 data['user_id'] = user_id;
+                data['portfolio'] = portfolio;
                 if (field) {
                     if (columns[index] === "DESCRIPTION") {
                         if (field.includes("DIVIDEND") || field.includes("Dividend")) {
