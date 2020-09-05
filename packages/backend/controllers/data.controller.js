@@ -72,6 +72,8 @@ async function getDashboardData(request) {
   if (jwt.isLoggedIn(request)) {
     try {
 
+      var result = {}
+
       var aggregated = await pool.query("SELECT to_char(month, 'YYYY-MM-DD') as Date, amount from \
       (SELECT date_trunc('month', date) AS month, sum(amount) as amount \
       FROM Raw_Data WHERE user_id = $1 AND type LIKE 'dividend' \
@@ -83,28 +85,50 @@ async function getDashboardData(request) {
       var cash_value_resp = await pool.query("select sum(amount) from raw_data where user_id = $1", [id]);
       var cash_value = Number(Number(cash_value_resp.rows[0].sum).toFixed(2));
 
+      var current_stocks = await pool.query("select symbol, quantity from (select symbol, sum(quantity) as quantity from raw_data where user_id = $1 group by symbol ) as table2 where quantity > 0 and symbol != '' order by quantity", [id])
+      var new_current_stocks = await stock_service.getAllStockData(current_stocks.rows)
+      var sorted_stocks = new_current_stocks.sort((a, b) => (a.amount < b.amount) ? 1 : -1);
+
+      var invested_sum = new_current_stocks.reduce((a, b) => ({amount: a.amount + b.amount}))
+      var invested =  Number(Number(invested_sum.amount).toFixed(2));
+
+      var change_total = 0;  var close_total = 0;
+      new_current_stocks.map((stock) => {
+        change_total += (stock.change *  stock.quantity);
+        close_total += (stock.close * stock.quantity);
+      } );
+      
+      var change =  Number(Number(change_total).toFixed(2));
+      var stock_percent = Number(Number((change_total/close_total)*100).toFixed(2));
+      var account_percent = Number(Number((change_total/(cash_value + invested))*100).toFixed(2));
+
+      var account_value = Number((cash_value + invested).toFixed(2));
+
       var div_stocks = await pool.query("select table3.symbol from ( select symbol from (select symbol, sum(quantity) \
       as val from raw_data  where user_id = $1 group by symbol ) as table2 where val > 0 and symbol != '') as table3 \
       INNER JOIN (select distinct symbol from raw_data where user_id = $2 and type = 'dividend') as table4 \
       ON table3.symbol = table4.symbol", [id, id]);
 
-      var current_stocks = await pool.query("select symbol, quantity from (select symbol, sum(quantity) as quantity from raw_data where user_id = $1 group by symbol ) as table2 where quantity > 0 and symbol != '' order by quantity", [id])
-      var new_current_stocks = await stock_service.getAllStockData(current_stocks.rows)
-      var sorted_stocks = new_current_stocks.sort((a, b) => (a.amount > b.amount) ? 1 : -1);
+      if (div_stocks.rows[0]) {
+        result.div_stocks = div_stocks.rows;
+        result.selected_stock = div_stocks.rows[0].symbol;
 
-      var invested_sum = new_current_stocks.reduce((a, b) => ({amount: a.amount + b.amount}))
-      var invested =  Number(Number(invested_sum.amount).toFixed(2));
+        var individual_div = await pool.query("SELECT to_char(date, 'YYYY-MM-DD') as date, amount from raw_data where user_id = $1 and symbol = $2 and type = 'dividend' order by date;", 
+        [id, result.selected_stock]);
+        result.individual_div = individual_div.rows;
+      }
 
-      var account_value = Number((cash_value + invested).toFixed(2))
-
-      return {  aggregated: aggregated.rows,
-                div_total: div_total, 
-                cash_value: cash_value,
-                invested: invested,
-                account_value: account_value,
-                current_stocks: sorted_stocks,
-                div_stocks: div_stocks.rows
-              };
+      result.aggregated = aggregated.rows;
+      result.div_total = div_total;
+      result.cash_value = cash_value;
+      result.invested = invested;
+      result.account_value = account_value;
+      result.current_stocks = sorted_stocks;
+      result.change = change;
+      result.account_percent = account_percent;
+      result.stock_percent = stock_percent;
+      
+      return result;
     } catch (error) {
       return error;
     }
