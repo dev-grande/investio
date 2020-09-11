@@ -1,6 +1,6 @@
 const csv = require('csv-parser');
 const fs = require('fs');
-const pool_module = require('../controllers/pool');
+const pool_module = require('../helpers/pool');
 const pool = pool_module.pool;
 const pgp = require('pg-promise')({});
 const db = pgp({    
