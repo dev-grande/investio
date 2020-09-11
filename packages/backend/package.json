@@ -32,7 +32,6 @@
     "pg": "^8.3.0",
     "pg-promise": "^10.5.8"
   },
-  "type": "module",
   "devDependencies": {
     "nodemon": "^2.0.4"
   }

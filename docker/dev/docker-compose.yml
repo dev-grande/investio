@@ -1,0 +1,57 @@
+version: '3.7'
+services:
+  pg:
+    container_name: pg
+    image: postgres:11-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      PGDATA: /data/postgres
+    volumes:
+        - pg:/data/postgres
+        - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+        - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
+    ports:
+      - 5432:5432
+    networks:
+      - pg
+    restart: unless-stopped
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:4.21
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@domain.local}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+    volumes:
+        - pgadmin:/root/.pgadmin
+    ports:
+      - ${PGADMIN_PORT:-5050}:80
+    networks:
+      - pg
+    restart: unless-stopped
+  frontend:
+    container_name: frontend
+    image: docker.pkg.github.com/dev-grande/investio/investio-frontend:latest
+    environment:
+      INVESTIO_BACKEND_HOST: backend
+    ports:
+      - 3000:80
+    networks:
+      - pg
+    restart: unless-stopped
+  backend:
+    container_name: backend
+    image: docker.pkg.github.com/dev-grande/investio/investio-backend:latest
+    environment:
+      POSTGRES_HOST: pg
+    ports:
+      - 4000:4000
+    networks:
+      - pg
+    restart: unless-stopped
+networks:
+  pg:
+    driver: bridge
+volumes:
+  pg:
+  pgadmin:

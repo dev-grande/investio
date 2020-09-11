@@ -5,6 +5,9 @@
     "lerna": "^3.22.1"
   },
   "scripts": {
-    "dkcu:db": "cd docker/db && docker-compose up -d"
+    "dkcu:db": "cd docker/db && docker-compose up -d",
+    "dkcu:dev": "cd docker/dev && docker-compose up -d",
+    "build:frontend": "cd packages/frontend && docker build --no-cache -t docker.pkg.github.com/invest-io/investio/investio-frontend:latest .",
+    "build:backend": "cd packages/backend && docker build --no-cache -t docker.pkg.github.com/invest-io/investio/investio-backend:latest ."
   }
 }
