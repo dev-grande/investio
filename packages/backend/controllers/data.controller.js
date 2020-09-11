@@ -66,11 +66,105 @@ const uploadData = (request, response) => {
       }
   }
 
+  const addPortfolio = (request, response) => {
+    const { user_id, portfolio } = request.body
+
+    if (jwt.isLoggedIn(request)) {        
+      pool.query("insert into portfolios (user_id, portfolio) values($1, $2) ON CONFLICT DO NOTHING", [user_id, portfolio], (error, results) => {
+        if (error) {
+          response.status(400).json({ status: 400, message: "error: insert error" });
+          // throw error
+        }
+        response.status(200).json(successMessage)
+      })
+    }
+    else {
+      response.status(400).json({ status: 401, message: "error: unauthorized user" })
+    }
+  }
+
+
 
 async function getDashboardData(request) {
+  const { user_id, portfolio } = request.body
+  console.log(user_id, portfolio);
+  if (jwt.isLoggedIn(request)) {
+    try {
+
+      var result = {}
+
+      var aggregated = await pool.query("SELECT to_char(month, 'YYYY-MM-DD') as Date, amount from \
+      (SELECT date_trunc('month', date) AS month, sum(amount) as amount \
+      FROM Raw_Data WHERE user_id = $1 AND portfolio = $2 and type LIKE 'dividend' \
+      GROUP BY month order by month) as table2", [user_id, portfolio]);
+
+      var div_total_resp = await pool.query("select sum(amount) as amount from raw_data where user_id = $1 AND portfolio = $2 and type LIKE 'dividend'", [user_id, portfolio]);
+      var div_total = Number(Number(div_total_resp.rows[0].amount).toFixed(2));
+
+      var cash_value_resp = await pool.query("select sum(amount) from raw_data where user_id = $1 AND portfolio = $2 ", [user_id, portfolio]);
+      var cash_value = Number(Number(cash_value_resp.rows[0].sum).toFixed(2));
+
+      var current_stocks = await pool.query("select symbol, quantity from (select symbol, sum(quantity) as quantity from raw_data where user_id = $1 AND portfolio = $2 group by symbol ) as table2 where quantity > 0 and symbol != '' order by quantity", [user_id, portfolio])
+      var new_current_stocks = await stock_service.getAllStockData(current_stocks.rows)
+      var sorted_stocks = new_current_stocks.sort((a, b) => (a.amount < b.amount) ? 1 : -1);
+
+      var invested_sum = new_current_stocks.reduce((a, b) => ({amount: a.amount + b.amount}))
+      var invested =  Number(Number(invested_sum.amount).toFixed(2));
+
+      var change_total = 0;  var close_total = 0;
+      new_current_stocks.map((stock) => {
+        change_total += (stock.change *  stock.quantity);
+        close_total += (stock.close * stock.quantity);
+      } );
+      
+      var change =  Number(Number(change_total).toFixed(2));
+      var stock_percent = Number(Number((change_total/close_total)*100).toFixed(2));
+      var account_percent = Number(Number((change_total/(cash_value + invested))*100).toFixed(2));
+
+      var account_value = Number((cash_value + invested).toFixed(2));
+
+      var div_stocks = await pool.query("select table3.symbol from ( select symbol from (select symbol, sum(quantity) \
+      as val from raw_data  where user_id = $1 AND portfolio = $2 group by symbol ) as table2 where val > 0 and symbol != '') as table3 \
+      INNER JOIN (select distinct symbol from raw_data where user_id = $3 AND portfolio = $4 and type = 'dividend') as table4 \
+      ON table3.symbol = table4.symbol", [user_id, portfolio, user_id, portfolio]);
+
+      console.log(div_stocks.rows);
+      if (div_stocks.rows[0]) {
+        result.div_stocks = div_stocks.rows;
+        result.selected_stock = div_stocks.rows[0].symbol;
+
+        var individual_div = await pool.query("SELECT to_char(date, 'YYYY-MM-DD') as date, amount from raw_data where user_id = $1 and portfolio = $2 and symbol = $3 and type = 'dividend' order by date;", 
+        [user_id, portfolio, result.selected_stock]);
+        result.individual_div = individual_div.rows;
+
+      }
+
+      result.aggregated = aggregated.rows;
+      result.div_total = div_total;
+      result.cash_value = cash_value;
+      result.invested = invested;
+      result.account_value = account_value;
+      result.current_stocks = sorted_stocks;
+      result.change = change;
+      result.account_percent = account_percent;
+      result.stock_percent = stock_percent;
+      
+      return result;
+    } catch (error) {
+      return error;
+    }
+  }
+  else {
+    return { status: 401, message: "error: unauthorized user" };
+  }
+}
+
+async function getAllDashboardData(request) {
   const id = parseInt(request.params.id)
   if (jwt.isLoggedIn(request)) {
     try {
+
+      var result = {}
 
       var aggregated = await pool.query("SELECT to_char(month, 'YYYY-MM-DD') as Date, amount from \
       (SELECT date_trunc('month', date) AS month, sum(amount) as amount \
@@ -83,28 +177,50 @@ async function getDashboardData(request) {
       var cash_value_resp = await pool.query("select sum(amount) from raw_data where user_id = $1", [id]);
       var cash_value = Number(Number(cash_value_resp.rows[0].sum).toFixed(2));
 
+      var current_stocks = await pool.query("select symbol, quantity from (select symbol, sum(quantity) as quantity from raw_data where user_id = $1 group by symbol ) as table2 where quantity > 0 and symbol != '' order by quantity", [id])
+      var new_current_stocks = await stock_service.getAllStockData(current_stocks.rows)
+      var sorted_stocks = new_current_stocks.sort((a, b) => (a.amount < b.amount) ? 1 : -1);
+
+      var invested_sum = new_current_stocks.reduce((a, b) => ({amount: a.amount + b.amount}))
+      var invested =  Number(Number(invested_sum.amount).toFixed(2));
+
+      var change_total = 0;  var close_total = 0;
+      new_current_stocks.map((stock) => {
+        change_total += (stock.change *  stock.quantity);
+        close_total += (stock.close * stock.quantity);
+      } );
+      
+      var change =  Number(Number(change_total).toFixed(2));
+      var stock_percent = Number(Number((change_total/close_total)*100).toFixed(2));
+      var account_percent = Number(Number((change_total/(cash_value + invested))*100).toFixed(2));
+
+      var account_value = Number((cash_value + invested).toFixed(2));
+
       var div_stocks = await pool.query("select table3.symbol from ( select symbol from (select symbol, sum(quantity) \
       as val from raw_data  where user_id = $1 group by symbol ) as table2 where val > 0 and symbol != '') as table3 \
       INNER JOIN (select distinct symbol from raw_data where user_id = $2 and type = 'dividend') as table4 \
       ON table3.symbol = table4.symbol", [id, id]);
 
-      var current_stocks = await pool.query("select symbol, quantity from (select symbol, sum(quantity) as quantity from raw_data where user_id = $1 group by symbol ) as table2 where quantity > 0 and symbol != '' order by quantity", [id])
-      var new_current_stocks = await stock_service.getAllStockData(current_stocks.rows)
-      var sorted_stocks = new_current_stocks.sort((a, b) => (a.amount > b.amount) ? 1 : -1);
+      if (div_stocks.rows[0]) {
+        result.div_stocks = div_stocks.rows;
+        result.selected_stock = div_stocks.rows[0].symbol;
 
-      var invested_sum = new_current_stocks.reduce((a, b) => ({amount: a.amount + b.amount}))
-      var invested =  Number(Number(invested_sum.amount).toFixed(2));
+        var individual_div = await pool.query("SELECT to_char(date, 'YYYY-MM-DD') as date, amount from raw_data where user_id = $1 and symbol = $2 and type = 'dividend' order by date;", 
+        [id, result.selected_stock]);
+        result.individual_div = individual_div.rows;
+      }
 
-      var account_value = Number((cash_value + invested).toFixed(2))
-
-      return {  aggregated: aggregated.rows,
-                div_total: div_total, 
-                cash_value: cash_value,
-                invested: invested,
-                account_value: account_value,
-                current_stocks: sorted_stocks,
-                div_stocks: div_stocks.rows
-              };
+      result.aggregated = aggregated.rows;
+      result.div_total = div_total;
+      result.cash_value = cash_value;
+      result.invested = invested;
+      result.account_value = account_value;
+      result.current_stocks = sorted_stocks;
+      result.change = change;
+      result.account_percent = account_percent;
+      result.stock_percent = stock_percent;
+      
+      return result;
     } catch (error) {
       return error;
     }
@@ -119,15 +235,14 @@ async function getReportsData(request) {
   const id = parseInt(request.params.id)
   if (jwt.isLoggedIn(request)) {
     try {
-      var raw_div = await pool.query("select to_char(date, 'MM/DD/YYYY') as date, symbol, type, amount from raw_data where user_id = $1 AND type LIKE 'dividend' order by symbol, date desc", [id]);
+      var raw_div = await pool.query("select to_char(date, 'MM/DD/YYYY') as date, portfolio, symbol, type, amount from raw_data where user_id = $1 AND type LIKE 'dividend' order by symbol, date desc", [id]);
 
       var aggregated_div = await pool.query("SELECT to_char(month, 'Mon YYYY') as Date, amount from \
       (SELECT date_trunc('month', date) AS month, sum(amount) as amount \
       FROM Raw_Data WHERE user_id = $1 AND type LIKE 'dividend' \
       GROUP BY month) as table2 order by month desc", [id]);
 
-      var buy_sell = await pool.query("select to_char(date, 'MM/DD/YYYY') as date, symbol, type, quantity, price, amount from raw_data where (type = 'buy' or type = 'sell') and user_id = $1 order by symbol, date desc", [id]);
-      "select sum(amount) as amount from raw_data where user_id = $1 and type LIKE 'dividend'"
+      var buy_sell = await pool.query("select to_char(date, 'MM/DD/YYYY') as date, portfolio, symbol, type, quantity, price, amount from raw_data where (type = 'buy' or type = 'sell') and user_id = $1 order by symbol, date desc", [id]);
 
       return {  raw_div: raw_div.rows, 
                 aggregated_div: aggregated_div.rows, 
@@ -160,10 +275,10 @@ async function getStockDivs(request) {
   }
 }
 
-const getYears = (request, response) => {
+const getPortfolios = (request, response) => {
   const id = parseInt(request.params.id)
   if (jwt.isLoggedIn(request)) {
-    pool.query("select distinct to_char(date, 'YYYY') as year from raw_data where user_id = $1 order by year desc", 
+    pool.query("select portfolio from portfolios where user_id = $1", 
     [id], (error, results) => {
       if (error) {
         throw error
@@ -176,15 +291,31 @@ const getYears = (request, response) => {
   }
 }
 
+const getYears = (request, response) => {
+  const { user_id, portfolio } = request.body;
+  if (jwt.isLoggedIn(request)) {
+    pool.query("select distinct to_char(date, 'YYYY') as year from raw_data where user_id = $1 and portfolio = $2 order by year desc", 
+    [ user_id, portfolio ], (error, results) => {
+      if (error) {
+        throw error
+      }
+      response.status(200).json(results.rows)
+    })
+  }
+  else {
+    response.status(400).json({ status: 401, message: "error: unauthorized user" })
+  }
+}
+
 const deleteYear = (request, response) => {
-  const { user_id, year } = request.body
+  const { user_id, year, portfolio } = request.body
 
   var year_before = (Number(year) - 1).toString() + '-12-31';
   var year_after = (Number(year) + 1).toString() + '-01-01';
 
   if (jwt.isLoggedIn(request)) {
-    pool.query('DELETE FROM raw_data WHERE user_id = $1 and date > $2 and date < $3', 
-    [user_id, year_before, year_after], (error, results) => {
+    pool.query('DELETE FROM raw_data WHERE user_id = $1 and date > $2 and date < $3 and portfolio = $4', 
+    [user_id, year_before, year_after, portfolio], (error, results) => {
       if (error) {
         throw error
       }
@@ -197,15 +328,38 @@ const deleteYear = (request, response) => {
   }
 }
 
+const deletePortfolio = (request, response) => {
+  const { user_id, portfolio } = request.body
+
+
+  if (jwt.isLoggedIn(request)) {
+    pool.query('DELETE FROM portfolios WHERE user_id = $1 and portfolio = $2', 
+    [user_id, portfolio], (error, results) => {
+      if (error) {
+        throw error
+      }
+      successMessage.data = `All Transaction data for portfolio: ${portfolio} of user_id: ${user_id} was deleted`;
+      response.status(200).send(successMessage)
+    })
+  }
+  else {
+    response.status(400).json({ status: 401, message: "error: unauthorized user" })
+  }
+}
+
 
 
 module.exports = {
     uploadData,
+    getAllDashboardData,
     getDashboardData,
     getReportsData,
     getStockDivs,
     deleteYear,
-    getYears
+    getYears,
+    getPortfolios,
+    addPortfolio,
+    deletePortfolio
 }
 
 

@@ -3,16 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { dataActions } from '../reducers/actions';
 import { LineChart } from '../features/LineChart';
 import { BarChart } from '../features/BarChart';
-import  { Table }  from "../features/Table";
-import NavBar from '../features/NavBar'
+import { Table }  from "../features/Table";
+import { StockDropdown } from '../features/StockDropdown';
+import { PortfolioDropdown } from '../features/PortfolioDropdown';
+import NavBar from '../features/NavBar';
 import logo from '../images/logo_name.png';
 import { getDashboardNav, switchDashboardNav } from "../reducers/navigationSlice"
 import {  CardDeck, Card, 
           Container, Row, Col, 
-          Nav, 
-          Image,
-          DropdownButton, Dropdown,
-          ButtonGroup } from 'react-bootstrap';
+          Nav, Image } from 'react-bootstrap';
 
 function get_line_chart_data(data, keyx, keyy, title) {
   var result = []
@@ -43,70 +42,14 @@ export function Dashboard() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if ( "id" in user ) {dispatch(dataActions.getDashboardData(user.id));}
+    if ( "id" in user ) {dispatch(dataActions.getDashboardData(user.id, "ALL"));
+    dispatch(dataActions.getPortfolios(user.id));
+  }
   }, [dispatch, user]);
 
   const data = useSelector(state => state.data);
 
-  function stock_buttons(data) {
-    if ("items" in data) { if("div_stocks" in data.items) {
-      
-        var stocks = data.items.div_stocks.map(val => {
-          return val.symbol;
-        })
-
-        var data_in = data.items;
-        var selected = data_in.selected_stock;
-        stocks.sort();
-      
-        var stock_b = stocks.map(stock => {
-          if (stock === selected) return {"stock": stock, "ui": "ui button active"}
-          else return {"stock": stock, "ui" : "ui button"}
-        })
-      
-        return (
-          <Container>
-            <br></br>
-              {!data.items.selected_stock && 
-              <Row className="text-center mb-3">
-                <Col>
-                <div>                
-                  <h4>Select a dividend stock from the drowdown below to see your stock's dividend history.</h4>
-                </div>
-
-                </Col>
-              </Row>
-              }
-
-              <Row className="text-center">
-                <Col>
-                  <DropdownButton
-                      as={ButtonGroup}
-                      key="stocks"
-                      id='dropdown-button-drop-stocks'
-                      variant="light"
-                      title={data.items.selected_stock}
-                      style={{fontSize: "10px", boxShadow:'none'}}
-                    >
-                      { stock_b.map((stock, index) =>
-                      <Dropdown.Item eventKey={index} 
-                        className={stock.ui} 
-                        onSelect={() => 
-                        dispatch(dataActions.getStockDiv(user.id, stock.stock))}>{stock.stock}
-                      </Dropdown.Item> )}
-                    </DropdownButton>
-               
-                </Col>
-              </Row>
-            <br></br> <br></br>
-          </Container>
-        );
-        
-      } }
-      return ( <div></div>)
-  } 
-
-    const styles = {
+  const styles = {
       container: { 
         marginTop: '4vh',
         width: '100%',
@@ -117,19 +60,18 @@ export function Dashboard() {
         paddingRight: '90px'
       },
 
-      monthly_margin: { top: 60, right: 60, bottom: 130, left: 70 },
-      monthly_div: { height: "66vh" , width: "50vw"},
+      monthly_margin: { top: 35, right: 60, bottom: 90, left: 70 },
+      monthly_div: { height: "57vh" , width: "40vw"},
 
       stock_margin: { top: 40, right: 40, bottom: 80, left: 70 },
-      stock_div: { height: "57vh" , width: "50vw"},
+      stock_div: { height: "57vh" , width: "40vw"},
 
       topCards: {
         height:'12vh'
       }
+  }
 
-    }
-
-    return (    
+  return (    
 
   <div >
       <NavBar />
@@ -140,12 +82,25 @@ export function Dashboard() {
       <div className="ui active inverted dimmer">
                 <div className="ui text loader">Loading</div>
             </div> }
-
       { data.items && 
       ( data.items.div_total &&
         <Row>
+          <Col xs={1}>
+          <div  style={{height:'12vh', width: "10wh"}}>
+          <PortfolioDropdown  stocks = {data.items.div_stocks}  user_id = {user.id}
+                              selected_stock = {data.items.selected_stock} />
+          </div>
+
+          </Col>
           <Col>
               <CardDeck>
+              {/* <Card className="text-center" style={{height:'12vh', width: "10wh"}}>
+                // <Card.Header>Cash Value:</Card.Header>
+                  <Card.Body>
+                    <h1 style={{fontSize: '2.7vh'}}>${data.items.cash_value.toLocaleString('en')}</h1>
+                  </Card.Body>
+                </Card> */}
+                
                 <Card className="text-center" style={styles.topCards}>
                 <Card.Header>Cash Value:</Card.Header>
                   <Card.Body>
@@ -154,32 +109,53 @@ export function Dashboard() {
                 </Card>
 
                 <Card className="text-center" style={styles.topCards}>
-                <Card.Header>Stock Value: </Card.Header>
+                <Card.Header>Change Percentage: </Card.Header>
                   <Card.Body>
-                    <h1 style={{fontSize: '2.7vh'}}>${data.items.invested.toLocaleString('en')}</h1>
+                    { data.items.account_percent > 0 &&
+                      <h1 style={{fontSize: '2.7vh', color: "#34B244"}}>+{data.items.account_percent}% </h1>
+                    }
+
+                    { data.items.account_percent < 0 &&
+                      <h1 style={{fontSize: '2.7vh', color: "#E30000"}}>{data.items.account_percent}% </h1>
+                    }
+                    
                   </Card.Body>
                 </Card>
 
                 <Card className="text-center" style={styles.topCards}>
                 <Card.Header>Account Value: </Card.Header>
                   <Card.Body>
-                    <h1 style={{fontSize: '2.7vh'}}>${data.items.account_value.toLocaleString('en')}</h1>
+                    <Card.Text>
+                    <p style={{fontSize: '2.7vh'}}>${data.items.account_value.toLocaleString('en')}
+                    </p> 
+                    </Card.Text>
                   </Card.Body>
                 </Card>
 
+
                 <Card className="text-center" style={styles.topCards}>
-                <Card.Header>Dividend Earnings: </Card.Header>
+                <Card.Header>Change Amount: </Card.Header>
                   <Card.Body>
-                    <h1 style={{fontSize: '2.7vh'}}>${data.items.div_total.toLocaleString('en')}</h1>
+                    {data.items.change > 0 && 
+                      <h1 style={{fontSize: '2.7vh', color: "#34B244"}}>+ ${data.items.change.toLocaleString('en') }</h1>
+                    }
+
+                    {data.items.change < 0 && 
+                      <h1 style={{fontSize: '2.7vh', color: "#E30000"}}>- ${(data.items.change*-1).toLocaleString('en') }</h1>
+                    }
+                    
+                  </Card.Body>
+                </Card>
+                
+
+                <Card className="text-center" style={styles.topCards}>
+                <Card.Header>Stock Value: </Card.Header>
+                  <Card.Body>
+                    <h1 style={{fontSize: '2.7vh'}}>${data.items.invested.toLocaleString('en')  }</h1>
                   </Card.Body>
                 </Card>
 
-                <Card className="text-center" style={styles.topCards}>
-                <Card.Header>Need to Find: </Card.Header>
-                  <Card.Body>
-                    <h1 style={{fontSize: '2.7vh'}}>$1,234.56</h1>
-                  </Card.Body>
-                </Card>
+
               
               </CardDeck>
               </Col>
@@ -189,7 +165,7 @@ export function Dashboard() {
 { data.items && 
       ( data.items.current_stocks && data.items.aggregated &&
   <Row className='mt-4'>
-    <Col xs={7}>
+    <Col xs={6}>
       <Card style={{height: '76vh'}} >
         <Card.Header>
           <Nav variant="tabs" defaultActiveKey={dashboard_nav} onSelect={(selectedKey) => dispatch(switchDashboardNav(selectedKey))} >
@@ -199,35 +175,63 @@ export function Dashboard() {
             <Nav.Item>
               <Nav.Link eventKey="stock">Stock Dividends</Nav.Link>
             </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="stocks">All Stocks</Nav.Link>
+            </Nav.Item>
           </Nav>
         </Card.Header>
         <Card.Body>
 
           {dashboard_nav==='monthly' && data.items && (
             data.items.aggregated &&
-            <LineChart data={get_line_chart_data(data.items.aggregated, 'date', 'amount', 'dividend earnings')}
-            title="Monthly Dividend Earnings" div={styles.monthly_div} margin={styles.monthly_margin} /> ) }
+            <Row className="text-center">
+              <Col> <LineChart data={get_line_chart_data(data.items.aggregated, 'date', 'amount', 'dividend earnings')}
+              title="Monthly Dividend Earnings" div={styles.monthly_div} margin={styles.monthly_margin} /> </Col>
+              <Col>
+                <h4>Total Dividend Earnings: <h3> ${data.items.div_total.toLocaleString('en')}</h3> </h4>
+              </Col>
+            </Row>
+            ) }
 
           {dashboard_nav==='stock' && data.items && (
             data.items.selected_stock && data.items.individual_div &&
             <div>
+              <StockDropdown  stocks = {data.items.div_stocks}  user_id = {user.id}
+                              selected_stock = {data.items.selected_stock} />
                 <LineChart data={get_line_chart_data(data.items.individual_div, 'date', 'amount', 'dividend earnings')}
-                            title={"Dividend Earnings for " + data.items.selected_stock} 
                             div={styles.stock_div} margin={styles.stock_margin} />
+                          
             </div> )} 
 
-          {dashboard_nav==='stock' && stock_buttons(data) }
+          {dashboard_nav==='stock' && data.items && (
+          !data.items.selected_stock && !data.items.individual_div &&
+          <h2>There are no stocks with dividends to display</h2> )}
+
+          {dashboard_nav==='stocks'  && data.items && ( data.items.current_stocks &&
+            <div style={{marginTop:'1vh'}}>
+              <BarChart title="All Stocks" bottom={null} left={{}} 
+              dimension={{height: "58vh" , width: "40vw"}} layout="horizonal"
+              margin={{ top: 30, right: 10, bottom: 30, left: 50 }}
+              data= {get_bar_chart_data(data.items.current_stocks.sort((a, b) => (a.amount > b.amount) ? 1 : -1), 
+                    'symbol', 'amount')}/>
+            </div>
+    
+          )}
 
         </Card.Body>
       </Card>
     </Col>
 
     <Col>
-        <Row>
+        <Row >
+
+
           <Col>
-            <Card style={{height: '45vh'}}>
-            <Card.Body>
-                <BarChart data= {get_bar_chart_data(data.items.current_stocks, 'symbol', 'amount')}/>
+            {/* <Card style={{height: '29.4vh'}}> */}
+            <Card style={{height: '45vh', width: "43.8vw"}}  >
+            {/* <Card style={{height: '45vh', width: "36.2vw"}}> */}
+            <Card.Body className="pr-1">
+              <Table vals={data.items.current_stocks} />
               </Card.Body>
             </Card>
           </Col>
@@ -235,10 +239,15 @@ export function Dashboard() {
           <Col className="mt-3">
             <Card style={{height: '29.4vh'}}>
             <Card.Body>
-              <Table vals={data.items.current_stocks} />
+                <BarChart title="Your Top Stocks" bottom={{}} left={null} 
+                          dimension={{height: "21vh" , width: "32vw"}} layout="vertical"
+                          margin={{ top: 20, right: 10, bottom: 30, left: 10 }}
+                          data= {get_bar_chart_data(data.items.current_stocks.sort((a, b) => (a.amount < b.amount) ? 1 : -1).slice(0, 6), 
+                          'symbol', 'amount')}/>
               </Card.Body>
             </Card>
           </Col>
+
         </Row>
     </Col>
 
@@ -251,8 +260,6 @@ export function Dashboard() {
       <Image src={logo} style={{height: '18vh', border: '1px'}} className='p-2 m-3'/>
     </Col>
   </Row> }
-
-  
 
 </Container>
 

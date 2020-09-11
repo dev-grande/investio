@@ -10,7 +10,8 @@ export const navigationSlice = createSlice({
   name: 'navigation',
   initialState: {
     pages: def,
-    dashboard_nav: "monthly"
+    dashboard_nav: "monthly",
+    portfolio_nav: ""
   },
   reducers: {
 
@@ -34,14 +35,23 @@ export const navigationSlice = createSlice({
         else if (active_page === "settings"){
             state.pages[2] = "active item";
         }
-    }  
+    } ,
+
+    switchPortfolio: (state, action) => {
+      var new_nav = action.payload;  
+      state.portfolio_nav = new_nav;
+  }  
+
+
+
   } 
 
 });
 
-export const { switchPage, switchDashboardNav } = navigationSlice.actions;
+export const { switchPage, switchDashboardNav, switchPortfolio } = navigationSlice.actions;
 
 export const getPages = state => state.navigation.pages;
 export const getDashboardNav = state => state.navigation.dashboard_nav;
+export const getPortfolio = state => state.navigation.portfolio_nav;
 
 export default navigationSlice.reducer

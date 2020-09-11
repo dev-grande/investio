@@ -9,19 +9,10 @@ export function data(state = {}, action) {
       };
       
     case "GET_DASHBOARD_SUCCESS":
-      return {
-      ...state,
-      items: { ...state.items,
-          div_total: action.data.div_total,
-          aggregated: action.data.aggregated,
-          cash_value: action.data.cash_value,
-          account_value: action.data.account_value,
-          invested: action.data.invested,
-          current_stocks: action.data.current_stocks,
-          div_stocks: action.data.div_stocks,
-          loading: false
-      } 
-      };
+      var items = { ...state.items};
+      Object.keys(action.data).map(function(key) { items[key] = action.data[key]; return key;})
+      items.loading = false;
+      return { items };
 
     case "GET_REPORTS_REQUEST":
       return {
@@ -66,12 +57,39 @@ export function data(state = {}, action) {
       } 
       };
 
+    case "GET_PORTFOLIOS_SUCCESS":
+      return {
+      ...state,
+      items: { ...state.items,
+          portfolios: action.data
+      } 
+      };
+
+    case "ADD_PORTFOLIO_SUCCESS":
+      console.log(state.items.portfolios)
+      console.log({portfolio: action.portfolio});
+      return {
+      ...state,
+      items: { ...state.items,
+          portfolios: [...state.items.portfolios, {portfolio: action.portfolio}]
+      } 
+      };
+
     case 'DELETE_YEAR_SUCCESS':
       // remove deleted year from state
       return {
         ...state,
         items: { ...state.items,
             years: state.items.years.filter(year => year.year !== action.year)
+        } 
+      };
+
+    case 'DELETE_PORTFOLIO_SUCCESS':
+      // remove deleted year from state
+      return {
+        ...state,
+        items: { ...state.items,
+          portfolios: state.items.portfolios.filter(p => p.portfolio !== action.portfolio)
         } 
       };
 

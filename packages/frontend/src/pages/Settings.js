@@ -1,27 +1,51 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { userActions, dataActions } from '../reducers/actions';
 import NavBar from '../features/NavBar'
 import { CSVUploader } from '../features/CSVUploader'
 import { CSVUploaderDrag } from "../features/CSVUploaderDrag"
 import logo from '../images/logo_name.png';
-import { Image, Card, Container, Row, Col, Button, ListGroup, CardDeck} from 'react-bootstrap';
+import { Image, Card, Container, Row, Col, Button, ListGroup, CardDeck, Nav} from 'react-bootstrap';
 import user_image from '../images/user_image.png';
 
-export function Settings() {
+import { getPortfolio, switchPortfolio } from "../reducers/navigationSlice"
 
+export function Settings() {
+  const [inputs, setInputs] = useState({
+    new_portfolio: '' });
+
+    const { new_portfolio } = inputs;
     const users = useSelector(state => state.users);
     const user = useSelector(state => state.authentication.user);
     const data = useSelector(state => state.data);
+    const portfolio = useSelector(getPortfolio);
     const dispatch = useDispatch();
+
+    function handleChange(e) {
+      const { name, value } = e.target;
+      setInputs(inputs => ({ ...inputs, [name]: value }));
+    }
+
+    function handlePortfolio(dispatch, selectedKey) {
+      dispatch(switchPortfolio(selectedKey))
+      dispatch(dataActions.getYears(user.id, selectedKey));
+    }
 
     useEffect(() => {
       dispatch(userActions.getAll());
-      if ( "id" in user ) {dispatch(dataActions.getYears(user.id));}
-    }, [dispatch, user]);
+      if ( "id" in user ) {
+        dispatch(dataActions.getYears(user.id, portfolio));
+        dispatch(dataActions.getPortfolios(user.id));
+      }
+    }, [dispatch, user, portfolio]);
 
     function handleDeleteUser(id) {
-      dispatch(userActions.delete(id));
+      dispatch(userActions.delete(id, portfolio));
+    }
+
+    function handleDeletePortfolio(id, portfolio) {
+      dispatch(dataActions.deletePortfolio(id, portfolio));
+      dispatch(switchPortfolio(""))
     }
 
     const styles = {
@@ -43,7 +67,7 @@ export function Settings() {
         <Container fluid style={styles.container}>
           <Row>
             <Col>
-                <Card style={{height:'50vh'}}>
+                <Card style={{height:'45vh'}}>
                   <Card.Header><h4>USER DATA</h4></Card.Header>
                   <Card.Body className='text-center' >
                     <Image src={user_image} roundedCircle style={{height: '13vh', border: '1px'}} className='p-2 m-3'/>
@@ -58,12 +82,48 @@ export function Settings() {
             </Col>
 
             <Col xs={9}>
-              <Card style={{height:'50vh'}}>
-                <Card.Header><h4>DATA IMPORT</h4></Card.Header>
+              <Card style={{height:'45vh'}}>
+                <Card.Header><h4>DATA IMPORT</h4>
+                <Nav variant="tabs" defaultActiveKey={portfolio} onSelect={(selectedKey) => handlePortfolio(dispatch, selectedKey)}  >
+                 
+                 {data.items && data.items.portfolios && (
+                    data.items.portfolios.map((p, index) => 
+                      <Nav.Item key={index}>
+                      <Nav.Link eventKey={p.portfolio}>{p.portfolio}</Nav.Link>
+                      </Nav.Item>
+                    )
+                 )}
+
+                 <Nav.Item className="ml-auto" style={{marginTop: "-15px", marginRight: "20px"}}>
+                 <div className="ui action input">
+                  <input type="text" placeholder="Portfolio Name" name="new_portfolio" value={new_portfolio}  onChange={handleChange} ></input>
+                  <button className="ui button" onClick={() => 
+                  dispatch(dataActions.addPortfolio(user.id, new_portfolio))}>Add</button>
+                  </div>
+                 </Nav.Item>
+
+                </Nav>
+                
+                </Card.Header>
+                
+                
+                { portfolio === "" &&  
+                  <Card.Body>
+                  <div className="ui segment">
+                  <div className="ui one column very relaxed stackable grid" style={{height: '30vh'}}>
+                      <div className="middle aligned column text-center">
+                      <h3>Select or add a portfolio name above to upload transaction data to.</h3>
+                      </div>
+                  </div>
+                  </div>
+                  </Card.Body>
+                }
+                
+                { portfolio !== "" &&
                 <Card.Body>
                   <p>Import yearly dividends data from CSV file.</p>
                   <div className="ui segment">
-                  <div className="ui two column very relaxed stackable grid" style={{height: '35vh'}}>
+                  <div className="ui two column very relaxed stackable grid" style={{height: '25vh'}}>
                       <div className="middle aligned column text-center">
                         <p>Click to upload.</p>
                         <CSVUploader />
@@ -77,13 +137,15 @@ export function Settings() {
                   </div>
                   </div>
                 </Card.Body>
+                }
+
               </Card>
             </Col>
           </Row>
 
           <Row className="mt-4">
             <Col>
-              <Card style={{height:'35vh'}}>
+              <Card style={{height:'40vh'}}>
                   <Card.Header><h4>USERS</h4></Card.Header>
                   <Card.Body>
                     <p>All registered users: </p>
@@ -109,12 +171,14 @@ export function Settings() {
             </Col>
 
             <Col xs={9}>
-            <Card style={{height:'35vh'}}>
+            <Card style={{height:'40vh'}}>
                 <Card.Header><h4>EDIT DATA</h4></Card.Header>
-
+                {portfolio !== "" &&
                 <Card.Body>
-                <p>Listed below are the year(s) of your transaction data.
-                  Click delete for the corresponding year to delete that year's transactions.
+
+                
+
+                <p>Listed below are the year(s) of your transaction data for the selected portfolio.
                 </p>
  
                     <CardDeck>
@@ -125,14 +189,17 @@ export function Settings() {
                           <Card.Body>
                             <h1 style={{fontSize: '2.7vh'}}>{year.year}</h1>
                             <Button variant="light" style={{fontSize: "10px", boxShadow:'none'}} key={year.year}
-                            onClick={() => dispatch(dataActions.deleteYear(user.id, year.year))}>
+                            onClick={() => dispatch(dataActions.deleteYear(user.id, year.year, portfolio))}>
                                         Delete</Button>
                           </Card.Body>
                         </Card>                    
                        ) } 
                     </CardDeck>
 
-                </Card.Body>
+                    <Button variant="light" style={{fontSize: "12px", boxShadow:'none', border: '0'}} className="mt-4"
+                            onClick={() => handleDeletePortfolio(user.id, portfolio)}>
+                                        Delete Portfolio: {portfolio}</Button>
+                  </Card.Body> }
               </Card>
 
             </Col>
