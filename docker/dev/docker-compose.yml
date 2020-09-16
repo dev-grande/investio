@@ -33,7 +33,7 @@ services:
     container_name: frontend
     image: docker.pkg.github.com/dev-grande/investio/investio-frontend:latest
     environment:
-      INVESTIO_BACKEND_HOST: backend
+      REACT_APP_BACKEND_HOST: 108.59.86.194
     ports:
       - 3000:80
     networks:
@@ -43,7 +43,7 @@ services:
     container_name: backend
     image: docker.pkg.github.com/dev-grande/investio/investio-backend:latest
     environment:
-      POSTGRES_HOST: pg
+      POSTGRES_HOST: 108.59.86.194
     ports:
       - 4000:4000
     networks:
