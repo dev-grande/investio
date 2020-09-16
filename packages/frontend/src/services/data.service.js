@@ -3,7 +3,7 @@ import { authHeader } from '../helpers';
 const host = process.env['REACT_APP_BACKEND_HOST'] || '0.0.0.0';
 console.log(process.env);
 const config =  {
-    apiUrl: `http://${host}:4000`
+    apiUrl: `https://${host}:4000`
 }
 
 export const dataService = {
