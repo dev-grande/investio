@@ -9,6 +9,8 @@ const app = express()
 var PORT = 4000
 var HOST = '0.0.0.0';
 
+
+
 if (process.env['PORT']) {
     PORT = process.env['PORT'];
 }
@@ -34,5 +36,6 @@ require("./routes/data.routes")(app);
 
 app.listen(PORT, HOST);
 console.log(`Running on http://${HOST}:${PORT}`);
+console.log(process.env);
 
 module.exports = app;

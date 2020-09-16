@@ -1,6 +1,7 @@
 FROM mhart/alpine-node:12 as builder
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
+ENV REACT_APP_BACKEND_HOST='108.59.86.194'
 COPY package.json ./
 COPY yarn.lock ./
 RUN yarn
