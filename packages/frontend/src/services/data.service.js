@@ -2,8 +2,11 @@ import { authHeader } from '../helpers';
 
 const host = process.env['REACT_APP_BACKEND_HOST'] || '0.0.0.0';
 console.log(process.env);
-const config =  {
-    apiUrl: `https://${host}:4000`
+
+var apiUrl = `http://${host}:4000`;
+
+if (process.env['NODE_ENV'] === 'production') {
+    apiUrl = `https://${host}:4000`;
 }
 
 export const dataService = {
@@ -26,7 +29,7 @@ function deleteYear(user_id, year, portfolio) {
         body: JSON.stringify({ user_id, year, portfolio })
     };
 
-    return fetch(`${config.apiUrl}/data/delete`, requestOptions).then(handleResponse);
+    return fetch(`${apiUrl}/data/delete`, requestOptions).then(handleResponse);
 }
 
 function deletePortfolio(user_id, portfolio) {
@@ -36,7 +39,7 @@ function deletePortfolio(user_id, portfolio) {
         body: JSON.stringify({ user_id, portfolio })
     };
 
-    return fetch(`${config.apiUrl}/data/deleteP`, requestOptions).then(handleResponse);
+    return fetch(`${apiUrl}/data/deleteP`, requestOptions).then(handleResponse);
 }
 
 function getYears(user_id, portfolio) {
@@ -46,7 +49,7 @@ function getYears(user_id, portfolio) {
         body: JSON.stringify({ user_id, portfolio })
     };
 
-    return fetch(`${config.apiUrl}/data/years`, requestOptions).then(handleResponse);
+    return fetch(`${apiUrl}/data/years`, requestOptions).then(handleResponse);
 }
 
 function getPortfolios(user_id) {
@@ -55,7 +58,7 @@ function getPortfolios(user_id) {
         headers: authHeader(),
     };
 
-    return fetch(`${config.apiUrl}/data/portfolios/${user_id}`, requestOptions).then(handleResponse);
+    return fetch(`${apiUrl}/data/portfolios/${user_id}`, requestOptions).then(handleResponse);
 }
 
 function addPortfolio(user_id, portfolio) {    
@@ -65,7 +68,7 @@ function addPortfolio(user_id, portfolio) {
         body: JSON.stringify({ user_id, portfolio })
     };
 
-    return fetch(`${config.apiUrl}/data/portfolio`, requestOptions)
+    return fetch(`${apiUrl}/data/portfolio`, requestOptions)
         .then(handleResponse)
         .then(updatedData => {
             return updatedData;
@@ -81,7 +84,7 @@ function getDashboardData(user_id, portfolio) {
             headers: authHeader(),
         };
     
-        return fetch(`${config.apiUrl}/data/dashboard/${user_id}`, requestOptions).then(handleResponse);
+        return fetch(`${apiUrl}/data/dashboard/${user_id}`, requestOptions).then(handleResponse);
 
     }
     const requestOptions = {
@@ -90,7 +93,7 @@ function getDashboardData(user_id, portfolio) {
         body: JSON.stringify({ user_id, portfolio })
     };
 
-    return fetch(`${config.apiUrl}/data/dashboard`, requestOptions).then(handleResponse);
+    return fetch(`${apiUrl}/data/dashboard`, requestOptions).then(handleResponse);
 }
 
 
@@ -100,7 +103,7 @@ function getReportsData(user_id) {
         headers: authHeader(),
     };
 
-    return fetch(`${config.apiUrl}/data/reports/${user_id}`, requestOptions).then(handleResponse);
+    return fetch(`${apiUrl}/data/reports/${user_id}`, requestOptions).then(handleResponse);
 }
 
 function upload(user_id, raw_data, portfolio) {
@@ -112,7 +115,7 @@ function upload(user_id, raw_data, portfolio) {
         body: JSON.stringify({ upload_data })
     };
 
-    return fetch(`${config.apiUrl}/data/upload`, requestOptions)
+    return fetch(`${apiUrl}/data/upload`, requestOptions)
         .then(handleResponse)
         .then(updatedData => {
             return updatedData;
@@ -126,7 +129,7 @@ function getStockDiv(user_id, symbol) {
         body: JSON.stringify({ user_id, symbol })
     };
 
-    return fetch(`${config.apiUrl}/data/dividend`, requestOptions)
+    return fetch(`${apiUrl}/data/dividend`, requestOptions)
         .then(handleResponse)
         .then(updatedData => {
             var new_data = updatedData;
