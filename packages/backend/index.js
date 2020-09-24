@@ -17,8 +17,8 @@ if (process.env['HOST'])  HOST = process.env['HOST'];
 var privateKey, certificate, credentials ;
 
 try {
-  privateKey  = fs.readFileSync( process.cwd() + '/certs/localhost-key.pem', 'utf8');
-  certificate = fs.readFileSync( process.cwd() + '/certs/localhost.pem', 'utf8');
+  privateKey  = fs.readFileSync( process.cwd() + '/certs/privkey.pem', 'utf8');
+  certificate = fs.readFileSync( process.cwd() + '/certs/fullchain.pem', 'utf8');
   credentials = {key: privateKey, cert: certificate};
 } catch {
   console.log("certs not found")
